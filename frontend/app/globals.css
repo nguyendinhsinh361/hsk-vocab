@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Font fallback nếu chưa nạp Quicksand/Huninn qua next/font */
+    --font-quicksand: 'Quicksand', system-ui, sans-serif;
+    --font-han: 'Huninn', 'Noto Sans SC', serif;
+  }
+
+  body {
+    @apply bg-neutral-50 text-neutral-900 antialiased;
+  }
+}

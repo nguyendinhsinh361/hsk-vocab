@@ -1,0 +1,11 @@
+/** Stable error codes — clients branch on these; never rename, only add. */
+export enum ErrorCode {
+  VALIDATION_FAILED = 'VALIDATION_FAILED',
+  UNAUTHENTICATED = 'UNAUTHENTICATED',
+  FORBIDDEN = 'FORBIDDEN',
+  NOT_FOUND = 'NOT_FOUND',
+  CONFLICT = 'CONFLICT',
+  RATE_LIMITED = 'RATE_LIMITED',
+  SERVICE_UNAVAILABLE = 'SERVICE_UNAVAILABLE',
+  INTERNAL = 'INTERNAL',
+}

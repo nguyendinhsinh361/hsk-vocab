@@ -1,0 +1,45 @@
+// Single source of truth for the database schema (`prisma migrate` derives SQL
+// from it). Field names stay camelCase for the TypeScript side; tables/columns
+// are @map'ed to snake_case — the conventional Postgres style, so raw SQL and
+// psql sessions never need quoted identifiers.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Prisma 7: the connection URL lives in prisma.config.ts (CLI) and in the
+  // PrismaPg driver adapter (runtime) — never in the schema.
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  passwordHash  String         @map("password_hash")
+  role          String         @default("user")
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+/// Refresh-token state is durable auth data, not cache: it must survive a
+/// Redis flush, and revoked rows stay around (revokedAt) for audit and
+/// reuse-detection. Expired/revoked rows are purged by a periodic cleanup job
+/// (`deleteMany where expiresAt < now OR revokedAt != null`), not by TTL magic.
+model RefreshToken {
+  id        String    @id // jti claim of the refresh JWT (uuid)
+  userId    Int       @map("user_id")
+  tokenHash String    @map("token_hash")
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz(6)
+  revokedAt DateTime? @map("revoked_at") @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}

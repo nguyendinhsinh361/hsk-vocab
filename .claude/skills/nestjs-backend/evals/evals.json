@@ -1,0 +1,56 @@
+{
+  "skill_name": "nestjs-backend",
+  "evals": [
+    {
+      "id": 1,
+      "name": "add-cancel-order-feature",
+      "prompt": "Trong repo order-service, thêm giúp mình API hủy đơn hàng: chỉ chủ đơn hoặc admin được hủy, chỉ hủy được khi đơn đang PENDING, và phải hoàn lại số lượng tồn kho của từng sản phẩm trong đơn. Viết code luôn nhé.",
+      "expected_output": "Surveys the repo first, follows its module structure, adds POST /orders/:id/cancel (or PATCH) with: resource-level ownership/admin check, state-transition guard (only PENDING, 409 otherwise), a single transaction restoring stock + updating status using the transaction manager throughout, validated params, proper exceptions, response DTO rather than raw entity, and flags (without rewriting the world) that the repo lacks auth guards/validation so the ownership check needs req.user. Unit tests for the rules if test infra exists.",
+      "files": [
+        "fixtures/order-service"
+      ],
+      "assertions": [
+        "The cancel use case runs inside a single transaction and every DB operation inside uses the transaction manager (no ambient repository calls inside the transaction block)",
+        "Stock restoration is atomic per product (increment via manager update/increment), and order status is checked and updated with the PENDING-only rule enforced (409/Conflict on non-PENDING)",
+        "Authorization is checked at resource level (order.userId vs current user, or admin role) — not just route level",
+        "The endpoint validates the id param (ParseIntPipe or equivalent) and does not return the raw entity with internalNote/user password fields",
+        "The response/explanation flags the missing global ValidationPipe AND the absent auth-guard infrastructure as pre-existing repo gaps (not silently assumed away)",
+        "New code follows the repo's existing file/naming conventions (orders module, kebab-case files, service holds logic, controller stays thin)",
+        "New code introduces no hardcoded secrets: any JWT secret/config in new files comes from env/ConfigService, not a literal like 'secret123'"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "security-audit-before-release",
+      "prompt": "Bên mình chuẩn bị release service này (repo order-service) cuối tuần. Audit giúp mình xem có vấn đề gì về bảo mật hay chất lượng không, cái nào phải sửa trước khi release?",
+      "expected_output": "Structured audit (Critical/Improve/Working well + top priorities) catching the planted issues: SQL injection in search, no global ValidationPipe (any-typed DTOs), no auth guards on any route incl. DELETE, hardcoded JWT secret + committed .env with prod password, synchronize:true, sync bcryptjs with cost 8, user enumeration in login messages, entities returned raw (password/internalNote leakage), client-supplied role on register (privilege escalation), N+1 in findOne, no transaction in create (stock decrement race + partial failure), float money math, unbounded findAll. Each with consequence and concrete fix; prioritized.",
+      "files": [
+        "fixtures/order-service"
+      ],
+      "assertions": [
+        "Finds the SQL injection in OrdersService.search and labels it Critical with a parameterized fix",
+        "Finds that no global ValidationPipe exists and connects it to the any-typed/undecorated DTOs (mass assignment, e.g. role on register)",
+        "Finds the missing authentication/authorization (all routes open, DELETE /orders/:id unguarded, no ownership checks)",
+        "Finds the hardcoded JWT secret ('secret123') and the committed .env with production password, and recommends rotation (not just deletion)",
+        "Finds the create() flow problems: no transaction around stock decrement + order save, and the check-then-act race on stock",
+        "Finds at least 5 of: synchronize:true, bcrypt cost 8/sync hashing, user enumeration in login, float money columns/math, N+1 in findOne, unbounded findAll, entity leakage of password/internalNote",
+        "Both the missing global ValidationPipe and the non-transactional create() are placed in the must-fix-before-release tier (not demoted), and the output is prioritized with concrete fixes"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "notification-system-architecture",
+      "prompt": "App e-commerce NestJS của bên mình (monolith, TypeORM + Postgres, có sẵn Redis) cần thêm hệ thống thông báo: gửi email, push notification và in-app notification khi có sự kiện như đơn hàng được tạo/giao, khuyến mãi. Khoảng 50k thông báo/ngày, cần retry khi gửi fail, và không được làm chậm API đặt hàng. Thiết kế giúp mình kiến trúc và cách triển khai.",
+      "expected_output": "Recommends a notifications module + BullMQ on the existing Redis (NOT Kafka/microservices for 50k/day — explicitly justifies avoiding over-engineering), in-process or outbox event from order flow depending on delivery guarantee discussed, queue jobs per channel with retry/backoff and DLQ/failed-job monitoring, idempotency (event id/jobId dedupe), notification entity for in-app + read status, channel adapters behind an interface, template handling, user preferences/opt-out, observability (queue metrics, correlation id), graceful shutdown for workers, and a phased rollout. Includes module structure and key code sketches.",
+      "files": [],
+      "assertions": [
+        "Recommends BullMQ (or equivalent Redis-backed queue) and explicitly rejects Kafka/microservices as over-engineering for 50k/day on an existing monolith with reasoning",
+        "Order API stays fast: notification dispatch happens async after the order transaction, with the commit-vs-publish consistency problem addressed (after-commit event or transactional outbox, trade-off stated)",
+        "Jobs are idempotent (deduplication via jobId/event id) and have retry with exponential backoff plus a dead-letter/failed-job monitoring story",
+        "Design includes channel abstraction (email/push/in-app adapters), in-app notification persistence with read state, and user preference/opt-out handling",
+        "Proposes concrete NestJS module structure (files/providers) consistent with feature-module conventions, with code sketches for the processor and producer",
+        "Covers operational concerns: queue metrics/alerting on failed jobs, graceful shutdown of workers, correlation ids across request → job"
+      ]
+    }
+  ]
+}

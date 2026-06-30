@@ -1,0 +1,134 @@
+// Migii HSK Vocab — data model
+// DB: MySQL 8.0 chạy NGOÀI (không docker). Dùng PrismaMariaDb adapter (xem prisma.service.ts).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum HskLevel {
+  HSK1
+  HSK2
+  HSK3
+  HSK4
+  HSK5
+  HSK6
+}
+
+enum QuizMode {
+  RECOGNITION // nhìn chữ Hán → chọn nghĩa
+  RECALL // nhìn nghĩa → chọn chữ Hán
+  MIXED
+}
+
+enum MasteryLevel {
+  NEW
+  LEARNING
+  FAMILIAR
+  MASTERED
+}
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String
+  avatar         String?
+  xp             Int       @default(0)
+  level          Int       @default(1)
+  streak         Int       @default(0)
+  lastActiveDate DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  sessions     QuizSession[]
+  cardProgress UserCardProgress[]
+}
+
+// Deck = một nhóm từ / chủ đề trong 1 level HSK (vd "Con người - HSK1").
+model Deck {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  level       HskLevel
+  position    Int      @default(0) // thứ tự hiển thị
+  createdAt   DateTime @default(now())
+
+  cards    Card[]
+  sessions QuizSession[]
+
+  @@index([level])
+}
+
+// Card = 1 gốc từ (vd 人) hoặc từ ghép (vd 人人). parentId nối từ ghép về gốc (cây từ).
+model Card {
+  id        String   @id @default(cuid())
+  deckId    String
+  character String // chữ Hán, vd "人"
+  pinyin    String // vd "rén"
+  meaning   String? // nghĩa tiếng Việt, vd "nhân - người" (null nếu không có)
+  level     HskLevel
+  position  Int      @default(0)
+  parentId  String? // gốc từ cha (null nếu chính nó là gốc) — dựng cây từ
+  createdAt DateTime @default(now())
+
+  deck     Deck               @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  parent   Card?              @relation("WordTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Card[]             @relation("WordTree")
+  answers  QuizAnswer[]
+  progress UserCardProgress[]
+
+  @@unique([deckId, character])
+  @@index([deckId])
+  @@index([parentId])
+}
+
+model QuizSession {
+  id             String    @id @default(cuid())
+  userId         String
+  deckId         String
+  mode           QuizMode  @default(RECOGNITION)
+  totalQuestions Int       @default(0)
+  correctCount   Int       @default(0)
+  xpEarned       Int       @default(0)
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deck    Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  answers QuizAnswer[]
+
+  @@index([userId])
+  @@index([deckId])
+}
+
+model QuizAnswer {
+  id        String   @id @default(cuid())
+  sessionId String
+  cardId    String
+  isCorrect Boolean
+  createdAt DateTime @default(now())
+
+  session QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  card    Card        @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([cardId])
+}
+
+model UserCardProgress {
+  id           String       @id @default(cuid())
+  userId       String
+  cardId       String
+  mastery      MasteryLevel @default(NEW)
+  correctCount Int          @default(0)
+  seenCount    Int          @default(0)
+  lastSeenAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardId])
+  @@index([userId])
+}

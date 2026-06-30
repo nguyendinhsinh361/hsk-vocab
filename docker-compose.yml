@@ -1,0 +1,14 @@
+# Chỉ chạy Redis bằng docker (DB Postgres dùng instance NGOÀI, không docker).
+# Deploy production do team system đảm nhận — file này phục vụ DEV local.
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: migii-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+volumes:
+  redis-data:
