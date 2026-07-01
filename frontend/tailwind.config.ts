@@ -29,6 +29,10 @@ const config: Config = {
           800: '#1E293B',
           900: '#0F172A',
         },
+        // Nhánh từ (cây từ gốc) — khớp Figma
+        blue: { 50: '#E3F2FD', 400: '#42A5F5', 700: '#1976D2', 800: '#1565C0' },
+        red: { 50: '#FFEBEE', 400: '#EF5350', 700: '#D32F2F' },
+        violet: { 50: '#EEEBFF', 400: '#785BFF', 700: '#543ACC' },
         success: '#22C55E',
         danger: '#EF4444',
       },

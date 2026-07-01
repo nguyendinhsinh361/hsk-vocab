@@ -1,71 +1,75 @@
 'use client';
 
 /**
- * MÀN: Chọn level (theo Figma "Chọn LV").
- * Mục đích: chọn level HSK phù hợp để bắt đầu.
- * Thành phần: tiêu đề, danh sách level HSK1–6 (HSK4–6 "Coming soon" disabled), CTA.
- * CTA & điều hướng: chọn 1 level → bật nút; "Bắt đầu hành trình" → lưu level → /dashboard.
- * States: default / selected / disabled (coming soon).
- * Route: /onboarding/level   ·   API: none (lưu localStorage qua lib/prefs)
+ * ROUTE /onboarding/level — "Chọn level" (bước onboarding CHỈ mobile, Figma Screen 5).
+ * Nền full-bleed, nội dung căn giữa cột phone. Desktop redirect /onboarding.
  */
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
-import { setLevel } from '@/lib/prefs';
-import type { HskLevel } from '@/lib/types';
+import Link from 'next/link';
+import { DesktopRedirect } from '@/components/DesktopRedirect';
+import { PhoneFrame } from '@/components/mobile/PhoneFrame';
+import { OnboardingBg } from '@/components/mobile/WordTree';
+import { ProgressPill } from '@/components/mobile/ProgressPill';
+import { TopNav } from '@/components/mobile/TopNav';
 import { cn } from '@/lib/cn';
 
-const LEVELS: { id: HskLevel; label: string; available: boolean }[] = [
-  { id: 'HSK1', label: 'HSK 1', available: true },
-  { id: 'HSK2', label: 'HSK 2', available: true },
-  { id: 'HSK3', label: 'HSK 3', available: true },
-  { id: 'HSK4', label: 'HSK 4', available: false },
-  { id: 'HSK5', label: 'HSK 5', available: false },
-  { id: 'HSK6', label: 'HSK 6', available: false },
+const LEVELS = [
+  { id: 'HSK1', label: 'HSK 1', icon: 'Seed', available: true },
+  { id: 'HSK2', label: 'HSK 2', icon: 'Sprout', available: true },
+  { id: 'HSK3', label: 'HSK 3', icon: 'Sapling', available: true },
+  { id: 'HSK4', label: 'HSK 4', icon: 'Bud', available: false },
+  { id: 'HSK5', label: 'HSK 5', icon: 'Bloom', available: false },
+  { id: 'HSK6', label: 'HSK 6', icon: 'Tree', available: false },
 ];
 
-export default function ChooseLevel() {
-  const router = useRouter();
-  const [selected, setSelected] = useState<HskLevel | null>(null);
-
-  function start() {
-    if (!selected) return;
-    setLevel(selected);
-    router.push('/dashboard');
-  }
-
+export default function ChooseLevelScreen() {
+  const [selected, setSelected] = useState('HSK1');
   return (
-    <main className="min-h-screen bg-gradient-to-b from-primary-100 to-white flex flex-col items-center px-6 py-12">
-      <div className="max-w-md w-full">
-        <h1 className="text-2xl font-bold text-neutral-900">Chọn level</h1>
-        <p className="mt-1 text-neutral-600">Bắt đầu hành trình bằng level phù hợp với bạn!</p>
-
-        <div className="mt-8 flex flex-col gap-3">
-          {LEVELS.map((lv) => (
-            <button
-              key={lv.id}
-              disabled={!lv.available}
-              onClick={() => setSelected(lv.id)}
-              className={cn(
-                'flex items-center justify-between rounded-2xl border bg-white p-4 text-left transition-colors',
-                'border-neutral-200 hover:border-primary-300',
-                selected === lv.id && 'border-primary ring-2 ring-primary/30',
-                !lv.available && 'opacity-50 cursor-not-allowed hover:border-neutral-200',
-              )}
-            >
-              <span className="font-semibold text-neutral-800">{lv.label}</span>
-              {!lv.available && (
-                <span className="text-xs font-semibold text-neutral-400">Coming soon</span>
-              )}
-            </button>
-          ))}
+    <>
+      <DesktopRedirect to="/onboarding" />
+      <PhoneFrame bg={<OnboardingBg />}>
+        <TopNav backHref="/onboarding/example" />
+        <div className="absolute left-[16px] top-[64px] z-20">
+          <ProgressPill fillPercent={75} />
         </div>
-
-        <Button className="mt-8 w-full" disabled={!selected} onClick={start}>
-          Bắt đầu hành trình
-        </Button>
-      </div>
-    </main>
+        <div className="absolute left-[16px] top-[100px] right-[16px] flex flex-col gap-[6px] z-10">
+          <h1 className="font-sans font-bold text-[24px] leading-[30px] tracking-[-0.15px] text-neutral-900">Chọn level</h1>
+          <p className="font-sans font-medium text-[16px] leading-[24px] tracking-[-0.18px] text-neutral-500">Bắt đầu hành trình bằng level phù hợp với bạn!</p>
+        </div>
+        <div className="no-scrollbar absolute left-[16px] right-[16px] top-[188px] bottom-[100px] overflow-y-auto flex flex-col gap-[12px] z-10">
+          {LEVELS.map((lv) => {
+            const isSel = selected === lv.id;
+            return (
+              <button
+                key={lv.id}
+                disabled={!lv.available}
+                onClick={() => setSelected(lv.id)}
+                className={cn(
+                  'flex items-center gap-[12px] rounded-[20px] border bg-white p-[16px] text-left transition-colors border-neutral-200',
+                  isSel && 'border-[#00b2a5] ring-2 ring-[#00b2a5]/25',
+                  !lv.available && 'opacity-60',
+                )}
+              >
+                <img src={`/img/svg/${lv.icon}.svg`} alt="" className="w-[36px] h-[36px] object-contain shrink-0" />
+                <div className="flex-1 font-sans font-semibold text-[16px] text-neutral-800">{lv.label}</div>
+                {lv.available ? (
+                  <span className={cn('size-[22px] rounded-full border-2 flex items-center justify-center shrink-0', isSel ? 'border-[#00b2a5]' : 'border-neutral-300')}>
+                    {isSel && <span className="size-[12px] rounded-full bg-[#00b2a5]" />}
+                  </span>
+                ) : (
+                  <img src="/img/svg/Comming-Soon.svg" alt="Coming soon" className="shrink-0 h-[28px] w-auto" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+        <div className="absolute bottom-0 left-0 w-full px-[16px] pt-[12px] pb-[24px] flex justify-center z-20 bg-gradient-to-t from-white via-white/90 to-transparent">
+          <Link href="/onboarding" className="w-full max-w-[343px] h-[48px] bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-[16px] text-white">
+            Tiếp tục
+          </Link>
+        </div>
+      </PhoneFrame>
+    </>
   );
 }

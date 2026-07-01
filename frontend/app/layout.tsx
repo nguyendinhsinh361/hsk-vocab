@@ -20,6 +20,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" className={quicksand.variable}>
+      <head>
+        {/* Font Hán (Huninn) — dùng cho chữ Trung; --font-han trỏ về font này. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Huninn&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="font-sans">{children}</body>
     </html>
   );

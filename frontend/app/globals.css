@@ -12,4 +12,26 @@
   body {
     @apply bg-neutral-50 text-neutral-900 antialiased;
   }
+
+  /* Ẩn thanh cuộn cho MỌI phần tử/màn (vẫn cuộn được bằng chuột/touch/phím) */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge cũ */
+  }
+  *::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Edge */
+    width: 0;
+    height: 0;
+  }
+}
+
+/* Tiện ích ẩn scrollbar cho vùng cuộn con (vd list level) nếu cần */
+@layer utilities {
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
