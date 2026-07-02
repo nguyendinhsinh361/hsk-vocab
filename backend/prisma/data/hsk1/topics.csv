@@ -1,0 +1,55 @@
+id,hskLevel,order,title,groupType,estimatedMinutes
+t-hsk1-cumtucodinh,HSK1,0,"{""vi"": ""Cụm từ cố định"", ""en"": ""Cụm từ cố định""}",topic_group,4
+t-hsk1-danhtucongviec,HSK1,1,"{""vi"": ""Danh từ công việc"", ""en"": ""Danh từ công việc""}",topic_group,4
+t-hsk1-danhtudongvat,HSK1,2,"{""vi"": ""Danh từ động vật"", ""en"": ""Danh từ động vật""}",topic_group,4
+t-hsk1-danhtuhientuongtunhien,HSK1,3,"{""vi"": ""Danh từ hiện tượng tự nhiên"", ""en"": ""Danh từ hiện tượng tự nhiên""}",topic_group,4
+t-hsk1-danhtuamthuc,HSK1,4,"{""vi"": ""Danh từ ẩm thực"", ""en"": ""Danh từ ẩm thực""}",topic_group,4
+t-hsk1-danhtuchinguoi,HSK1,5,"{""vi"": ""Danh từ chỉ người"", ""en"": ""Danh từ chỉ người""}",topic_group,4
+t-hsk1-danhtunoichon,HSK1,6,"{""vi"": ""Danh từ nơi chốn"", ""en"": ""Danh từ nơi chốn""}",topic_group,4
+t-hsk1-danhtuphuonghuong,HSK1,7,"{""vi"": ""Danh từ phương hướng"", ""en"": ""Danh từ phương hướng""}",topic_group,4
+t-hsk1-danhtunghethuat,HSK1,8,"{""vi"": ""Danh từ nghệ thuật"", ""en"": ""Danh từ nghệ thuật""}",topic_group,4
+t-hsk1-danhtuvatdunghangngay,HSK1,9,"{""vi"": ""Danh từ vật dụng hàng ngày"", ""en"": ""Danh từ vật dụng hàng ngày""}",topic_group,4
+t-hsk1-danhturieng,HSK1,10,"{""vi"": ""Danh từ riêng"", ""en"": ""Danh từ riêng""}",topic_group,4
+t-hsk1-daitu,HSK1,11,"{""vi"": ""Đại từ"", ""en"": ""Đại từ""}",topic_group,4
+t-hsk1-daitunhanxung,HSK1,12,"{""vi"": ""Đại từ nhân xưng"", ""en"": ""Đại từ nhân xưng""}",topic_group,4
+t-hsk1-dongtuchisutontai,HSK1,13,"{""vi"": ""Động từ chỉ sự tồn tại"", ""en"": ""Động từ chỉ sự tồn tại""}",topic_group,4
+t-hsk1-dongtudichuyen,HSK1,14,"{""vi"": ""Động từ di chuyển"", ""en"": ""Động từ di chuyển""}",topic_group,4
+t-hsk1-dongtudoisong,HSK1,15,"{""vi"": ""Động từ đời sống"", ""en"": ""Động từ đời sống""}",topic_group,4
+t-hsk1-dongtugiaodich,HSK1,16,"{""vi"": ""Động từ giao dịch"", ""en"": ""Động từ giao dịch""}",topic_group,4
+t-hsk1-dongtugiaotiep,HSK1,17,"{""vi"": ""Động từ giao tiếp"", ""en"": ""Động từ giao tiếp""}",topic_group,4
+t-hsk1-dongtuhoctap,HSK1,18,"{""vi"": ""Động từ học tập"", ""en"": ""Động từ học tập""}",topic_group,4
+t-hsk1-dongtulihop,HSK1,19,"{""vi"": ""Động từ li hợp"", ""en"": ""Động từ li hợp""}",topic_group,4
+t-hsk1-dongtunangnguyen,HSK1,20,"{""vi"": ""Động từ năng nguyện"", ""en"": ""Động từ năng nguyện""}",topic_group,4
+t-hsk1-dongtutamly,HSK1,21,"{""vi"": ""Động từ tâm lý"", ""en"": ""Động từ tâm lý""}",topic_group,4
+t-hsk1-dongtuxuhuong,HSK1,22,"{""vi"": ""Động từ xu hướng"", ""en"": ""Động từ xu hướng""}",topic_group,4
+t-hsk1-gioitu,HSK1,23,"{""vi"": ""Giới từ"", ""en"": ""Giới từ""}",topic_group,4
+t-hsk1-ketcaudongbo,HSK1,24,"{""vi"": ""Kết cấu động - bổ"", ""en"": ""Kết cấu động - bổ""}",topic_group,4
+t-hsk1-lientu,HSK1,25,"{""vi"": ""Liên từ"", ""en"": ""Liên từ""}",topic_group,4
+t-hsk1-luongtu,HSK1,26,"{""vi"": ""Lượng từ"", ""en"": ""Lượng từ""}",topic_group,4
+t-hsk1-photuchimucdo,HSK1,27,"{""vi"": ""Phó từ chỉ mức độ"", ""en"": ""Phó từ chỉ mức độ""}",topic_group,4
+t-hsk1-photuchiphamvi,HSK1,28,"{""vi"": ""Phó từ chỉ phạm vi"", ""en"": ""Phó từ chỉ phạm vi""}",topic_group,4
+t-hsk1-photuchitansuat,HSK1,29,"{""vi"": ""Phó từ chỉ tần suất"", ""en"": ""Phó từ chỉ tần suất""}",topic_group,4
+t-hsk1-photuchithoigian,HSK1,30,"{""vi"": ""Phó từ chỉ thời gian"", ""en"": ""Phó từ chỉ thời gian""}",topic_group,4
+t-hsk1-sotu,HSK1,31,"{""vi"": ""Số từ"", ""en"": ""Số từ""}",topic_group,4
+t-hsk1-thantu,HSK1,32,"{""vi"": ""Thán từ"", ""en"": ""Thán từ""}",topic_group,4
+t-hsk1-tiento,HSK1,33,"{""vi"": ""Tiền tố"", ""en"": ""Tiền tố""}",topic_group,4
+t-hsk1-tinhtubieuthitinhchat,HSK1,34,"{""vi"": ""Tình từ biểu thị tính chất"", ""en"": ""Tình từ biểu thị tính chất""}",topic_group,4
+t-hsk1-tinhtubieuthitrangthai,HSK1,35,"{""vi"": ""Tính từ biểu thị trạng thái"", ""en"": ""động tác""}",topic_group,4
+t-hsk1-trotudongthai,HSK1,36,"{""vi"": ""Trợ từ động thái"", ""en"": ""Trợ từ động thái""}",topic_group,4
+t-hsk1-trotungukhi,HSK1,37,"{""vi"": ""Trợ từ ngữ khí"", ""en"": ""Trợ từ ngữ khí""}",topic_group,4
+t-hsk1-tuchithoigian,HSK1,38,"{""vi"": ""Từ chỉ thời gian"", ""en"": ""Từ chỉ thời gian""}",topic_group,4
+t-hsk1-tuphandoan,HSK1,39,"{""vi"": ""Từ phán đoán"", ""en"": ""Từ phán đoán""}",topic_group,4
+t-hsk1-tuphudinh,HSK1,40,"{""vi"": ""Từ phủ định"", ""en"": ""Từ phủ định""}",topic_group,4
+t-hsk1-anuong,HSK1,41,"{""vi"": ""Ăn uống"", ""en"": ""Ăn uống""}",topic_group,4
+t-hsk1-connguoi,HSK1,42,"{""vi"": ""Con người"", ""en"": ""Con người""}",topic_group,4
+t-hsk1-congnghe,HSK1,43,"{""vi"": ""Công nghệ"", ""en"": ""Công nghệ""}",topic_group,4
+t-hsk1-congviec,HSK1,44,"{""vi"": ""Công việc"", ""en"": ""Công việc""}",topic_group,4
+t-hsk1-dichuyen,HSK1,45,"{""vi"": ""Di chuyển"", ""en"": ""Di chuyển""}",topic_group,4
+t-hsk1-diadiem,HSK1,46,"{""vi"": ""Địa điểm"", ""en"": ""Địa điểm""}",topic_group,4
+t-hsk1-hoatdongdoithuong,HSK1,47,"{""vi"": ""Hoạt động đời thường"", ""en"": ""Hoạt động đời thường""}",topic_group,4
+t-hsk1-hoatdong,HSK1,48,"{""vi"": ""Hoạt động"", ""en"": ""Hoạt động""}",topic_group,4
+t-hsk1-giaoduc,HSK1,49,"{""vi"": ""Giáo dục"", ""en"": ""Giáo dục""}",topic_group,4
+t-hsk1-tinhchat,HSK1,50,"{""vi"": ""Tính chất"", ""en"": ""Tính chất""}",topic_group,4
+t-hsk1-soluong,HSK1,51,"{""vi"": ""Số lượng"", ""en"": ""Số lượng""}",topic_group,4
+t-hsk1-suckhoe,HSK1,52,"{""vi"": ""Sức khỏe"", ""en"": ""Sức khỏe""}",topic_group,4
+t-hsk1-thoigian,HSK1,53,"{""vi"": ""Thời gian"", ""en"": ""Thời gian""}",topic_group,4

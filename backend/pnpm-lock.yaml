@@ -75,6 +75,9 @@ importers:
       '@types/node':
         specifier: ^22.5.0
         version: 22.20.0
+      csv-parse:
+        specifier: ^5.5.6
+        version: 5.6.0
       eslint:
         specifier: ^9.9.0
         version: 9.39.4(jiti@2.7.0)
@@ -1475,6 +1478,9 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  csv-parse@5.6.0:
+    resolution: {integrity: sha512-l3nz3euub2QMg5ouu5U09Ew9Wf6/wQ8I++ch1loQ0ljmzhmfZYrH9fflS22i/PQEvsPvxCwxgz5q7UB8K1JO4Q==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -4849,6 +4855,8 @@ snapshots:
       which: 2.0.2
 
   csstype@3.2.3: {}
+
+  csv-parse@5.6.0: {}
 
   debug@4.4.3:
     dependencies:

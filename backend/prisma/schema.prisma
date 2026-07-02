@@ -1,5 +1,7 @@
-// Migii HSK Vocab — data model
-// DB: MySQL 8.0 chạy NGOÀI (không docker). Dùng PrismaMariaDb adapter (xem prisma.service.ts).
+// Migii HSK Vocab — data model (nội dung HSK + tiến độ người dùng)
+// DB: MySQL 8.0 chạy NGOÀI. Dùng PrismaMariaDb adapter (xem src/prisma/prisma.service.ts).
+// Ghi chú `///` là tài liệu schema. Để comment hiện trong TablePlus (cột `comment` của DB),
+// chạy `pnpm run db:comments` (script prisma/comment-columns.ts đẩy comment xuống MySQL).
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,6 +10,7 @@ datasource db {
   provider = "mysql"
 }
 
+/* ------------------------- Enums ------------------------- */
 enum HskLevel {
   HSK1
   HSK2
@@ -17,10 +20,54 @@ enum HskLevel {
   HSK6
 }
 
-enum QuizMode {
-  RECOGNITION // nhìn chữ Hán → chọn nghĩa
-  RECALL // nhìn nghĩa → chọn chữ Hán
-  MIXED
+enum HanVietLevel {
+  M1
+  M2
+  M3
+}
+
+enum PartOfSpeech {
+  N
+  V
+  ADJ
+  ADV
+  PRON
+  NUM
+  MW
+  AUX
+  PREP
+  CONJ
+  INTERJ
+  PART
+  UNKNOWN // cột pos rỗng
+}
+
+enum TopicGroupType {
+  TOPIC_GROUP
+}
+
+enum ExerciseGroup {
+  A
+  B
+  C
+  D
+}
+
+enum ExerciseType {
+  A1
+  A2
+  A3
+  A4
+  B1
+  B2
+  B3
+  C1
+  C2
+  C3
+  C4
+  D1
+  D2
+  D3
 }
 
 enum MasteryLevel {
@@ -30,105 +77,305 @@ enum MasteryLevel {
   MASTERED
 }
 
+/* --------------------- Nội dung HSK --------------------- */
+
+/// Nhóm chủ đề học (topic_group) theo cấp HSK.
+model Topic {
+  /// Khoá chính (id chủ đề, vd t-hsk1-giadinh).
+  id               String         @id
+  /// Cấp HSK của chủ đề (suy từ tên thư mục data khi seed).
+  hskLevel         HskLevel
+  /// Thứ tự hiển thị chủ đề trong cấp HSK.
+  order            Int            @default(0)
+  /// Tên chủ đề đa ngữ, JSON { vi, en }.
+  title            Json
+  /// Loại nhóm (hiện chỉ topic_group).
+  groupType        TopicGroupType @default(TOPIC_GROUP)
+  /// Thời lượng học ước tính (phút).
+  estimatedMinutes Int            @default(0)
+
+  words     TopicWord[]
+  roots     Root[]
+  exercises Exercise[]
+
+  @@index([hskLevel, order])
+}
+
+/// Từ vựng (chữ Hán + pinyin + Hán-Việt + nghĩa + ví dụ).
+model Word {
+  /// Khoá chính (id từ, vd w-mama).
+  id           String       @id
+  /// Chữ Hán (hanzi), vd 妈妈.
+  hz           String
+  /// Phiên âm pinyin, vd māma.
+  py           String
+  /// Âm Hán-Việt, vd "ma ma".
+  hv           String
+  /// Từ loại; rỗng trong CSV → UNKNOWN.
+  pos          PartOfSpeech @default(UNKNOWN)
+  /// Nghĩa đa ngữ, JSON { vi, en } (= cột mn trong CSV).
+  meaning      Json
+  /// Đường dẫn file audio phát âm (nếu có).
+  audioUrl     String?
+  /// Lượng từ (measure word) đi kèm, nếu có.
+  mw           String?
+  /// Câu ví dụ (chữ Hán).
+  exSample     String?      @db.Text
+  /// Pinyin của câu ví dụ.
+  exPinyin     String?      @db.Text
+  /// Nghĩa câu ví dụ đa ngữ, JSON { vi, en }.
+  exMeaning    Json?
+  /// Cấp HSK của từ.
+  hskLevel     HskLevel
+  /// Mức độ Hán-Việt (M1 dễ → M3 khó).
+  hanVietLevel HanVietLevel
+  /// Đã publish (hiển thị cho người học) hay chưa.
+  isPublished  Boolean      @default(true)
+  /// Thời điểm tạo bản ghi.
+  createdAt    DateTime     @default(now())
+
+  topics       TopicWord[]
+  roots        WordRoot[]
+  patternWords PatternWord[]
+  exercises    Exercise[]
+  progress     UserWordProgress[]
+
+  @@index([hskLevel])
+  @@index([isPublished])
+}
+
+/// Gốc từ (chữ gốc). 1 root có nhiều pattern (công thức ghép).
+model Root {
+  /// Khoá chính (id gốc, vd r-shang).
+  id       String   @id
+  /// Chữ Hán của gốc, vd 上.
+  hz       String
+  /// Pinyin của gốc.
+  py       String
+  /// Âm Hán-Việt của gốc.
+  hv       String
+  /// Cấp HSK của gốc.
+  hskLevel HskLevel
+  /// Chủ đề chứa gốc (tuỳ chọn); FK Topic, xoá topic → NULL.
+  topicId  String?
+
+  topic     Topic?        @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  patterns  RootPattern[]
+  words     WordRoot[]
+  exercises Exercise[]
+
+  @@index([hskLevel])
+  @@index([topicId])
+}
+
+/// Một pattern (công thức ghép) của gốc từ. Root 1 — N RootPattern.
+model RootPattern {
+  /// Khoá chính (id pattern; seed sinh dạng "<rootId>::<idx>").
+  id      String @id @default(cuid())
+  /// Gốc từ chứa pattern này (FK Root).
+  rootId  String
+  /// Công thức ghép, vd "上+___" hoặc "___+上".
+  formula String
+  /// Nghĩa của pattern.
+  meaning String @db.Text
+  /// Thứ tự pattern trong gốc.
+  order   Int    @default(0)
+
+  root  Root          @relation(fields: [rootId], references: [id], onDelete: Cascade)
+  words PatternWord[]
+
+  @@index([rootId])
+}
+
+/// Bảng nối pattern ↔ word (chuẩn hoá từ wordIds trong roots.patterns).
+model PatternWord {
+  /// FK RootPattern (pattern chứa từ).
+  patternId String
+  /// FK Word (từ minh hoạ cho pattern).
+  wordId    String
+  /// Thứ tự từ trong pattern.
+  order     Int    @default(0)
+
+  pattern RootPattern @relation(fields: [patternId], references: [id], onDelete: Cascade)
+  word    Word        @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([patternId, wordId])
+  @@index([wordId])
+}
+
+/// Bảng nối topic ↔ word (N–N, có thứ tự hiển thị).
+model TopicWord {
+  /// FK Topic.
+  topicId String
+  /// FK Word.
+  wordId  String
+  /// Thứ tự từ trong chủ đề.
+  order   Int    @default(0)
+
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  word  Word  @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([topicId, wordId])
+  @@index([wordId])
+}
+
+/// Bảng nối word ↔ root (N–N, một từ có thể gồm nhiều gốc).
+model WordRoot {
+  /// FK Word.
+  wordId String
+  /// FK Root.
+  rootId String
+  /// Thứ tự gốc trong từ.
+  order  Int    @default(0)
+
+  word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  root Root @relation(fields: [rootId], references: [id], onDelete: Cascade)
+
+  @@id([wordId, rootId])
+  @@index([rootId])
+}
+
+/// Câu hỏi luyện tập (13 dạng, 4 nhóm A/B/C/D).
+model Exercise {
+  /// Khoá chính (CSV không có id → cuid()).
+  id               String        @id @default(cuid())
+  /// Chủ đề của câu hỏi (tuỳ chọn); FK Topic.
+  topicId          String?
+  /// Gốc từ liên quan (tuỳ chọn, chủ yếu nhóm D); FK Root.
+  rootId           String?
+  /// Từ vựng câu hỏi xoay quanh (bắt buộc); FK Word.
+  wordId           String
+  /// Dạng câu hỏi cụ thể (A1..D3).
+  type             ExerciseType
+  /// Nhóm kỹ năng (A nhận biết, B tái tạo, C ngữ cảnh, D gốc từ).
+  group            ExerciseGroup
+  /// Tiêu đề dạng bài đa ngữ, JSON { vi, en }.
+  title            Json
+  /// Đề bài đa ngữ, JSON { vi, en }.
+  question         Json
+  /// Các phương án trả lời đa ngữ, JSON { vi: [...] }.
+  answers          Json
+  /// Đáp án đúng đa ngữ, JSON { vi }.
+  correctAnswer    Json
+  /// Giải thích đáp án đa ngữ, JSON { vi } (tuỳ chọn).
+  explanation      Json?
+  /// Kịch bản audio cho dạng nghe (A2…), nếu có.
+  audioScript      String?       @db.Text
+  /// Mô tả ảnh cho dạng nhìn ảnh (B2), nếu có.
+  imageDescription String?       @db.Text
+  /// Cấp HSK của câu hỏi.
+  hskLevel         HskLevel
+  /// Thứ tự câu hỏi.
+  order            Int           @default(0)
+
+  word  Word   @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  topic Topic? @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  root  Root?  @relation(fields: [rootId], references: [id], onDelete: SetNull)
+
+  answersLog PracticeAnswer[]
+
+  @@index([topicId])
+  @@index([wordId])
+  @@index([rootId])
+  @@index([type])
+  @@index([group])
+  @@index([hskLevel])
+}
+
+/* ------------------- Người dùng / luyện tập ------------------- */
+
+/// Người dùng học tập.
 model User {
+  /// Khoá chính.
   id             String    @id @default(cuid())
+  /// Email đăng nhập (duy nhất).
   email          String    @unique
+  /// Tên hiển thị.
   name           String
+  /// Ảnh đại diện (URL), nếu có.
   avatar         String?
+  /// Điểm kinh nghiệm tích luỹ.
   xp             Int       @default(0)
+  /// Cấp độ người dùng (tính từ XP).
   level          Int       @default(1)
+  /// Chuỗi ngày học liên tiếp.
   streak         Int       @default(0)
+  /// Ngày hoạt động gần nhất (dùng tính streak).
   lastActiveDate DateTime?
+  /// Thời điểm tạo tài khoản.
   createdAt      DateTime  @default(now())
+  /// Thời điểm cập nhật gần nhất.
   updatedAt      DateTime  @updatedAt
 
-  sessions     QuizSession[]
-  cardProgress UserCardProgress[]
+  wordProgress UserWordProgress[]
+  sessions     PracticeSession[]
 }
 
-// Deck = một nhóm từ / chủ đề trong 1 level HSK (vd "Con người - HSK1").
-model Deck {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  level       HskLevel
-  position    Int      @default(0) // thứ tự hiển thị
-  createdAt   DateTime @default(now())
-
-  cards    Card[]
-  sessions QuizSession[]
-
-  @@index([level])
-}
-
-// Card = 1 gốc từ (vd 人) hoặc từ ghép (vd 人人). parentId nối từ ghép về gốc (cây từ).
-model Card {
-  id        String   @id @default(cuid())
-  deckId    String
-  character String // chữ Hán, vd "人"
-  pinyin    String // vd "rén"
-  meaning   String? // nghĩa tiếng Việt, vd "nhân - người" (null nếu không có)
-  level     HskLevel
-  position  Int      @default(0)
-  parentId  String? // gốc từ cha (null nếu chính nó là gốc) — dựng cây từ
-  createdAt DateTime @default(now())
-
-  deck     Deck               @relation(fields: [deckId], references: [id], onDelete: Cascade)
-  parent   Card?              @relation("WordTree", fields: [parentId], references: [id], onDelete: SetNull)
-  children Card[]             @relation("WordTree")
-  answers  QuizAnswer[]
-  progress UserCardProgress[]
-
-  @@unique([deckId, character])
-  @@index([deckId])
-  @@index([parentId])
-}
-
-model QuizSession {
-  id             String    @id @default(cuid())
-  userId         String
-  deckId         String
-  mode           QuizMode  @default(RECOGNITION)
-  totalQuestions Int       @default(0)
-  correctCount   Int       @default(0)
-  xpEarned       Int       @default(0)
-  completedAt    DateTime?
-  createdAt      DateTime  @default(now())
-
-  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  deck    Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
-  answers QuizAnswer[]
-
-  @@index([userId])
-  @@index([deckId])
-}
-
-model QuizAnswer {
-  id        String   @id @default(cuid())
-  sessionId String
-  cardId    String
-  isCorrect Boolean
-  createdAt DateTime @default(now())
-
-  session QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  card    Card        @relation(fields: [cardId], references: [id], onDelete: Cascade)
-
-  @@index([sessionId])
-  @@index([cardId])
-}
-
-model UserCardProgress {
+/// Tiến độ ghi nhớ của người dùng theo từng từ.
+model UserWordProgress {
+  /// Khoá chính.
   id           String       @id @default(cuid())
+  /// FK User.
   userId       String
-  cardId       String
+  /// FK Word.
+  wordId       String
+  /// Mức thành thạo (NEW → MASTERED).
   mastery      MasteryLevel @default(NEW)
+  /// Số lần trả lời đúng.
   correctCount Int          @default(0)
+  /// Số lần từ này xuất hiện.
   seenCount    Int          @default(0)
+  /// Lần gặp gần nhất.
   lastSeenAt   DateTime?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, cardId])
+  @@unique([userId, wordId])
   @@index([userId])
+}
+
+/// Một phiên luyện tập (theo chủ đề).
+model PracticeSession {
+  /// Khoá chính.
+  id           String    @id @default(cuid())
+  /// FK User.
+  userId       String
+  /// Chủ đề luyện tập (tuỳ chọn).
+  topicId      String?
+  /// Tổng số câu trong phiên.
+  total        Int       @default(0)
+  /// Số câu trả lời đúng.
+  correctCount Int       @default(0)
+  /// XP kiếm được trong phiên.
+  xpEarned     Int       @default(0)
+  /// Thời điểm hoàn thành phiên (NULL nếu chưa xong).
+  completedAt  DateTime?
+  /// Thời điểm bắt đầu phiên.
+  createdAt    DateTime  @default(now())
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers PracticeAnswer[]
+
+  @@index([userId])
+}
+
+/// Đáp án của người dùng cho từng câu trong phiên luyện tập.
+model PracticeAnswer {
+  /// Khoá chính.
+  id         String   @id @default(cuid())
+  /// FK PracticeSession.
+  sessionId  String
+  /// FK Exercise (câu hỏi đã trả lời).
+  exerciseId String
+  /// Trả lời đúng hay sai.
+  isCorrect  Boolean
+  /// Thời điểm trả lời.
+  createdAt  DateTime @default(now())
+
+  session  PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([exerciseId])
 }

@@ -24,7 +24,7 @@ export default function SummaryScreen() {
             Thêm <span className="font-han text-neutral-800" lang="zh">人</span> vào bất kỳ khái niệm nào
           </p>
           <p className="font-sans font-medium text-[14px] text-neutral-500 text-center">Để cho ra được từ có nghĩa</p>
-          <Link href="/dashboard" className="mt-[12px] w-full max-w-[327px] h-[48px] bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center gap-[8px] font-sans font-semibold text-[16px] text-white">
+          <Link href="/quiz/people" className="mt-[12px] w-full max-w-[327px] h-[48px] bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center gap-[8px] font-sans font-semibold text-[16px] text-white">
             Chiến luôn đi nào
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M13 6l6 6-6 6" />
