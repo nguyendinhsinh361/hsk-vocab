@@ -4,6 +4,12 @@ import { join } from 'path';
 import { parse } from 'csv-parse/sync';
 import { PrismaClient } from '@prisma/client';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import Redis from 'ioredis';
+import { hashPassword } from '../src/auth/password.util';
+
+// Tài khoản demo (đăng nhập sẵn, khỏi tạo mới).
+const DEMO_EMAIL = 'demo@migii.local';
+const DEMO_PASSWORD = 'demo1234';
 
 // Prisma 7: dùng adapter MySQL (không new PrismaClient trần).
 const url = new URL(process.env.DATABASE_URL || 'mysql://root@localhost:3306/migii_hsk');
@@ -196,14 +202,41 @@ async function main() {
     await seedLevel(dir, lv.toUpperCase());
   }
 
-  // Demo user (chưa có auth)
+  // Demo user (đăng nhập sẵn: demo@migii.local / demo1234)
+  const passwordHash = await hashPassword(DEMO_PASSWORD);
   await prisma.user.upsert({
-    where: { email: 'demo@migii.local' },
-    update: {},
-    create: { email: 'demo@migii.local', name: 'Demo User' },
+    where: { email: DEMO_EMAIL },
+    update: { passwordHash },
+    create: { email: DEMO_EMAIL, name: 'Demo User', passwordHash },
   });
 
-  console.log('Seed xong.');
+  // Xoá cache Redis: steps/session/home cũ trỏ tới id (Exercise/Root…) đã bị reset.
+  await flushCaches();
+
+  console.log(`Seed xong. Demo: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
+}
+
+/** Xoá cache Redis (practice/home) sau khi seed — tránh steps cache trỏ id cũ. */
+async function flushCaches() {
+  const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+  const r = new Redis(redisUrl, {
+    maxRetriesPerRequest: 1,
+    enableOfflineQueue: false,
+    lazyConnect: true,
+  });
+  try {
+    await r.connect();
+    let removed = 0;
+    for (const pattern of ['practice:*', 'home:*']) {
+      const keys = await r.keys(pattern);
+      if (keys.length) removed += await r.del(...keys);
+    }
+    console.log(`Đã xoá ${removed} key cache Redis (practice/home).`);
+  } catch (e) {
+    console.log('Bỏ qua xoá cache Redis (không kết nối được):', (e as Error).message);
+  } finally {
+    r.disconnect();
+  }
 }
 
 main()

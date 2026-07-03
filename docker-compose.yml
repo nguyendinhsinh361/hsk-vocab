@@ -1,5 +1,5 @@
-# Chỉ chạy Redis bằng docker (DB Postgres dùng instance NGOÀI, không docker).
-# Deploy production do team system đảm nhận — file này phục vụ DEV local.
+# DEV local: chỉ chạy Redis (cache) bằng docker.
+# MySQL 8.0 dùng instance NGOÀI (không docker). Deploy production do team system đảm nhận.
 services:
   redis:
     image: redis:7-alpine

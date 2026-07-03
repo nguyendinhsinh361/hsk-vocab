@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    /* Font fallback nếu chưa nạp Quicksand/Huninn qua next/font */
+    /* Font UI (Quicksand) + font chữ Hán (Noto Sans SC — phủ đủ giản thể). */
     --font-quicksand: 'Quicksand', system-ui, sans-serif;
-    --font-han: 'Huninn', 'Noto Sans SC', serif;
+    --font-han: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
 
   body {
@@ -33,5 +33,20 @@
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Trượt vào từ phải sang trái (dùng khi bung "Xem thêm"). */
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .animate-slide-in-right {
+    animation: slideInRight 0.35s ease-out both;
   }
 }

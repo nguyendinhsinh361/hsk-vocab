@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { RedisService } from './redis.service';
 
+/** @Global: mọi module inject RedisService mà không cần import lại. */
 @Global()
 @Module({
   providers: [RedisService],

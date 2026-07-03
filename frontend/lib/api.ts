@@ -1,21 +1,21 @@
 import type {
-  DeckSummary,
-  Card,
-  WordTreeNode,
-  StartQuizResponse,
-  AnswerResponse,
-  CompleteResponse,
   UserProfile,
-  QuizMode,
+  PracticeSession,
+  PracticeResult,
+  PracticeComplete,
+  HomeData,
 } from './types';
+import { getUserId } from './session';
 
 const BASE = '/api';
 
-// MVP chưa có auth: gửi x-user-id để BE resolve (xem backend/common/current-user.decorator.ts).
-// Khi thêm auth → thay bằng Authorization: Bearer <token>.
+// MVP: gửi x-user-id (từ phiên đăng nhập) để BE resolve user.
+// Khi thêm auth token → thay bằng Authorization: Bearer <token>.
 function headers(json = false): HeadersInit {
   const h: Record<string, string> = {};
   if (json) h['Content-Type'] = 'application/json';
+  const uid = getUserId();
+  if (uid) h['x-user-id'] = uid;
   return h;
 }
 
@@ -31,30 +31,44 @@ async function req<T>(path: string, init?: RequestInit): Promise<T> {
 export const api = {
   me: () => req<UserProfile>('/users/me', { headers: headers() }),
 
-  decks: (level?: string) =>
-    req<DeckSummary[]>(`/decks${level ? `?level=${level}` : ''}`, {
-      headers: headers(),
+  // ---- Xác thực (email + mật khẩu) ----
+  register: (email: string, name: string, password: string) =>
+    req<{ user: UserProfile }>('/auth/register', {
+      method: 'POST',
+      headers: headers(true),
+      body: JSON.stringify({ email, name, password }),
     }),
-  deckCards: (deckId: string) =>
-    req<Card[]>(`/decks/${deckId}/cards`, { headers: headers() }),
-  wordTree: (deckId: string) =>
-    req<WordTreeNode[]>(`/decks/${deckId}/tree`, { headers: headers() }),
+  login: (email: string, password: string) =>
+    req<{ user: UserProfile }>('/auth/login', {
+      method: 'POST',
+      headers: headers(true),
+      body: JSON.stringify({ email, password }),
+    }),
 
-  startQuiz: (deckId: string, mode: QuizMode = 'RECOGNITION') =>
-    req<StartQuizResponse>('/quiz/start', {
-      method: 'POST',
-      headers: headers(true),
-      body: JSON.stringify({ deckId, mode }),
-    }),
-  answer: (sessionId: string, cardId: string, answer: string) =>
-    req<AnswerResponse>('/quiz/answer', {
-      method: 'POST',
-      headers: headers(true),
-      body: JSON.stringify({ sessionId, cardId, answer }),
-    }),
-  complete: (sessionId: string) =>
-    req<CompleteResponse>(`/quiz/${sessionId}/complete`, {
-      method: 'POST',
+  home: () => req<HomeData>('/home', { headers: headers() }),
+
+  // ---- Luồng luyện tập (Trailer → Pattern → Test) ----
+  practiceSession: (root = 'people') =>
+    req<PracticeSession>(`/practice/session?root=${encodeURIComponent(root)}`, {
       headers: headers(),
+    }),
+  practiceAnswer: (
+    sessionId: string,
+    exerciseId: string,
+    optionIndex: number,
+    text?: string,
+  ) =>
+    req<PracticeResult>('/practice/answer', {
+      method: 'POST',
+      headers: headers(true),
+      body: JSON.stringify({ sessionId, exerciseId, optionIndex, text }),
+    }),
+
+  // Hoàn thành phiên → BE cập nhật XP/level/streak + tiến trình.
+  practiceComplete: (sessionId: string) =>
+    req<PracticeComplete>('/practice/complete', {
+      method: 'POST',
+      headers: headers(true),
+      body: JSON.stringify({ sessionId }),
     }),
 };

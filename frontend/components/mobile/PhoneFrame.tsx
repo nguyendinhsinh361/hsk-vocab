@@ -19,7 +19,7 @@ export function PhoneFrame({
       style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {bg}
-      <div className={cn('relative mx-auto w-full max-w-[430px] min-h-[100dvh]', className)}>
+      <div className={cn('relative mx-auto w-full max-w-[26.875rem] min-h-[100dvh]', className)}>
         {children}
       </div>
     </div>

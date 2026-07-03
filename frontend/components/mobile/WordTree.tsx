@@ -38,9 +38,9 @@ export function WordTree({ shiftY = 0 }: { shiftY?: number }) {
   return (
     <>
       {/* Cụm cây căn giữa (cột 375); shiftY để đẩy lên khi bị bottom sheet che */}
-      <div className="absolute inset-0 mx-auto w-[375px]" style={shiftY ? { transform: `translateY(${shiftY}px)` } : undefined}>
+      <div className="absolute inset-0 mx-auto w-[23.4375rem]" style={shiftY ? { transform: `translateY(${shiftY}px)` } : undefined}>
         {/* Nhánh nối nét đứt: đỏ/xanh xuất phát từ TRUNG ĐIỂM cạnh trái/phải thẻ gốc, bẻ 90° rồi xuống; tím thẳng xuống giữa */}
-        <svg className="absolute inset-0 w-[375px] h-[812px] pointer-events-none" viewBox="0 0 375 812" fill="none">
+        <svg className="absolute inset-0 w-[23.4375rem] h-[50.75rem] pointer-events-none" viewBox="0 0 375 812" fill="none">
           {/* đỏ: trung điểm cạnh trái gốc → bẻ 90° → xuống thẳng trục tâm thẻ trái (x=59) */}
           <path d="M121 370 Q59 370 59 436 L59 560" stroke="#EF5350" strokeWidth="2.5" strokeDasharray="3 7" strokeLinecap="round" />
           {/* tím: đáy gốc → THẲNG ĐỨNG xuống thẻ giữa (x=188, thẻ tím cao hơn) */}
@@ -49,33 +49,33 @@ export function WordTree({ shiftY = 0 }: { shiftY?: number }) {
           <path d="M254 370 Q316 370 316 436 L316 550" stroke="#42A5F5" strokeWidth="2.5" strokeDasharray="3 7" strokeLinecap="round" />
         </svg>
         {/* Chip +10 gốc từ */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-[234px] bg-neutral-100 border border-neutral-300 border-b-[3px] rounded-[16px] px-[12px] py-[6px]">
-          <span className="font-sans font-medium text-[14px] leading-[20px] text-neutral-800">+10 gốc từ...</span>
+        <div className="absolute left-1/2 -translate-x-1/2 top-[14.625rem] bg-neutral-100 border border-neutral-300 border-b-[0.1875rem] rounded-xl px-3 py-1.5">
+          <span className="font-sans font-medium text-sm leading-5 text-neutral-800">+10 gốc từ...</span>
         </div>
         {/* Thẻ gốc 人 */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 top-[304px] w-[132px] bg-white border border-[#00b2a5] border-b-[3px] rounded-[116px] p-[12px] flex flex-col items-center gap-[6px]"
-          style={{ filter: 'drop-shadow(0px 0px 18px rgba(0,178,165,0.28))' }}
+          className="absolute left-1/2 -translate-x-1/2 top-[19rem] w-[8.25rem] bg-white border border-[#00b2a5] border-b-[0.1875rem] rounded-[7.25rem] p-3 flex flex-col items-center gap-1.5"
+          style={{ filter: 'drop-shadow(0 0 1.125rem rgba(0,178,165,0.28))' }}
         >
-          <div className="size-[36px] rounded-full bg-[#00b2a5] flex items-center justify-center">
-            <span className="font-han font-bold text-white text-[24px] leading-[30px]" lang="zh">人</span>
+          <div className="size-9 rounded-full bg-[#00b2a5] flex items-center justify-center">
+            <span className="font-han font-bold text-white text-2xl leading-[1.875rem]" lang="zh">人</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="font-sans font-medium text-[14px] leading-[20px] text-[#1976d2]">rén</span>
-            <span className="font-sans font-medium text-[14px] leading-[20px] text-neutral-800 whitespace-nowrap">nhân - người</span>
+            <span className="font-sans font-medium text-sm leading-5 text-[#1976d2]">rén</span>
+            <span className="font-sans font-medium text-sm leading-5 text-neutral-800 whitespace-nowrap">nhân - người</span>
           </div>
-          <div className="bg-neutral-100 rounded-[12px] px-[8px] py-[2px]">
-            <span className="font-sans font-semibold text-[12px] leading-[16px] text-neutral-500">4 từ</span>
+          <div className="bg-neutral-100 rounded-[0.75rem] px-2 py-0.5">
+            <span className="font-sans font-semibold text-xs leading-4 text-neutral-500">4 từ</span>
           </div>
         </div>
         {/* 3 thẻ nhánh */}
-        <BranchCard className="left-[261px] top-[550px] bg-blue-50 border-blue-400" pinyinColor="#1565c0" />
-        <BranchCard className="left-[133px] top-[500px] bg-[#eeebff] border-[#785bff]" pinyinColor="#543acc" />
-        <BranchCard className="left-[4px] top-[560px] bg-red-50 border-red-400" pinyinColor="#d32f2f" />
+        <BranchCard className="left-[16.3125rem] top-[34.375rem] bg-blue-50 border-blue-400" pinyinColor="#1565c0" />
+        <BranchCard className="left-[8.3125rem] top-[31.25rem] bg-[#eeebff] border-[#785bff]" pinyinColor="#543acc" />
+        <BranchCard className="left-1 top-[35rem] bg-red-50 border-red-400" pinyinColor="#d32f2f" />
         {/* Chấm nối đặt đúng trung điểm cạnh TRÊN mỗi thẻ */}
-        <span className="absolute left-[54px] top-[555px] size-[9px] rounded-full bg-[#EF5350]" />
-        <span className="absolute left-[183px] top-[495px] size-[9px] rounded-full bg-[#785BFF]" />
-        <span className="absolute left-[311px] top-[545px] size-[9px] rounded-full bg-[#42A5F5]" />
+        <span className="absolute left-[3.375rem] top-[34.6875rem] size-[0.5625rem] rounded-full bg-[#EF5350]" />
+        <span className="absolute left-[11.4375rem] top-[30.9375rem] size-[0.5625rem] rounded-full bg-[#785BFF]" />
+        <span className="absolute left-[19.4375rem] top-[34.0625rem] size-[0.5625rem] rounded-full bg-[#42A5F5]" />
       </div>
     </>
   );
@@ -83,13 +83,13 @@ export function WordTree({ shiftY = 0 }: { shiftY?: number }) {
 
 function BranchCard({ className, pinyinColor }: { className: string; pinyinColor: string }) {
   return (
-    <div className={`absolute w-[110px] border border-b-2 rounded-[16px] p-[12px] flex flex-col items-center gap-[6px] ${className}`}>
-      <div className="bg-white rounded-full px-[8px] py-[4px]">
-        <span className="font-han text-[16px] leading-[24px] text-neutral-800" lang="zh">人人</span>
+    <div className={`absolute w-[6.875rem] border border-b-2 rounded-xl p-3 flex flex-col items-center gap-1.5 ${className}`}>
+      <div className="bg-white rounded-full px-2 py-1">
+        <span className="font-han text-base leading-6 text-neutral-800" lang="zh">人人</span>
       </div>
       <div className="flex flex-col items-center">
-        <span className="font-sans font-medium text-[14px] leading-[20px]" style={{ color: pinyinColor }}>rén rén</span>
-        <span className="font-sans font-medium text-[14px] leading-[20px] text-neutral-900 whitespace-nowrap">Nhóm người</span>
+        <span className="font-sans font-medium text-sm leading-5" style={{ color: pinyinColor }}>rén rén</span>
+        <span className="font-sans font-medium text-sm leading-5 text-neutral-900 whitespace-nowrap">Nhóm người</span>
       </div>
     </div>
   );

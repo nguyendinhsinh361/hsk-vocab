@@ -5,7 +5,7 @@ import { cn } from '@/lib/cn';
 export function TopNav({
   backHref,
   skipHref,
-  topClass = 'top-[16px]',
+  topClass = 'top-4',
 }: {
   backHref?: string;
   skipHref?: string;
@@ -17,7 +17,7 @@ export function TopNav({
         <Link
           href={backHref}
           aria-label="Quay lại"
-          className={cn('absolute left-[12px] z-20 size-[40px] flex items-center justify-center text-neutral-900', topClass)}
+          className={cn('absolute left-3 z-20 size-10 flex items-center justify-center text-neutral-900', topClass)}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M19 12H5" />
@@ -26,7 +26,7 @@ export function TopNav({
         </Link>
       )}
       {skipHref && (
-        <Link href={skipHref} className={cn('absolute right-[16px] z-20 h-[40px] flex items-center font-sans font-semibold text-[12px] text-neutral-900', topClass)}>
+        <Link href={skipHref} className={cn('absolute right-4 z-20 h-10 flex items-center font-sans font-semibold text-xs text-neutral-900', topClass)}>
           Skip
         </Link>
       )}

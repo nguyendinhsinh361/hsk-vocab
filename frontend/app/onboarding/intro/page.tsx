@@ -17,18 +17,18 @@ export default function IntroScreen() {
       <DesktopRedirect to="/onboarding" />
       <PhoneFrame bg={<OnboardingTreeBg />}>
         <WordTree />
-        <Link href="/dashboard" className="absolute right-[16px] top-[16px] h-[40px] flex items-center z-20 font-sans font-semibold text-[12px] text-neutral-900">
+        <Link href="/home" className="absolute right-4 top-4 h-10 flex items-center z-20 font-sans font-semibold text-xs text-neutral-900">
           Skip
         </Link>
-        <div className="absolute left-[16px] top-[64px] z-20">
+        <div className="absolute left-4 top-16 z-20">
           <ProgressPill fillPercent={25} />
         </div>
-        <div className="absolute left-1/2 -translate-x-1/2 top-[100px] w-[343px] max-w-[90%] text-center flex flex-col gap-[8px] z-10">
-          <h1 className="font-sans font-bold text-[24px] leading-[30px] tracking-[-0.15px] text-[#008f85]">Biết 1 từ gốc</h1>
-          <p className="font-sans font-medium text-[16px] leading-[24px] tracking-[-0.18px] text-neutral-900">Đoán được hàng chục từ mới</p>
+        <div className="absolute left-1/2 -translate-x-1/2 top-[6.25rem] w-[21.4375rem] max-w-[90%] text-center flex flex-col gap-2 z-10">
+          <h1 className="font-sans font-bold text-2xl leading-[1.875rem] tracking-[-0.0094rem] text-[#008f85]">Biết 1 từ gốc</h1>
+          <p className="font-sans font-medium text-base leading-6 tracking-[-0.0112rem] text-neutral-900">Đoán được hàng chục từ mới</p>
         </div>
-        <div className="absolute bottom-0 left-0 w-full px-[16px] pb-[24px] flex justify-center z-20">
-          <Link href="/onboarding/example" className="w-full max-w-[343px] h-[48px] bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-[16px] text-white">
+        <div className="absolute bottom-0 left-0 w-full px-4 pb-6 flex justify-center z-20">
+          <Link href="/onboarding/example" className="w-full max-w-[21.4375rem] h-12 bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-base text-white">
             Tiếp tục
           </Link>
         </div>

@@ -1,9 +1,9 @@
-.PHONY: help install dev dev-be dev-fe build lint test redis-up redis-down db-setup db-reset db-seed docker-build
+.PHONY: help install dev dev-be dev-fe redis-up redis-down build lint test db-setup db-reset db-seed docker-build
 
 help:
 	@echo "Migii HSK Vocab — lệnh thường dùng"
 	@echo "  make install     Cài deps BE + FE (pnpm)"
-	@echo "  make redis-up    Bật Redis (docker-compose)"
+	@echo "  make redis-up    Bật Redis cache (docker) — tuỳ chọn"
 	@echo "  make redis-down  Tắt Redis"
 	@echo "  make dev         Chạy BE (:4000) + FE (:3000) song song"
 	@echo "  make db-setup    Prisma migrate + generate + seed (DB NGOÀI)"
@@ -23,10 +23,19 @@ redis-up:
 redis-down:
 	docker compose down
 
-# Chạy song song; Ctrl+C dừng cả hai.
-dev: redis-up
+# Chạy BE trước, ĐỢI :4000 sẵn sàng rồi mới chạy FE (tránh proxy /api bị ECONNREFUSED).
+# Ctrl+C dừng cả hai. Cần MySQL NGOÀI (DATABASE_URL trong backend/.env).
+# Redis là tuỳ chọn (cache) — bật bằng `make redis-up` nếu muốn tăng tốc.
+dev:
 	@trap 'kill 0' INT; \
 	(cd backend && pnpm start:dev) & \
+	echo "⏳ Đợi backend sẵn sàng ở http://localhost:4000 …"; \
+	n=0; until nc -z localhost 4000 2>/dev/null || [ $$n -ge 120 ]; do sleep 0.5; n=$$((n+1)); done; \
+	if nc -z localhost 4000 2>/dev/null; then \
+		echo "✅ Backend đã lên — khởi động frontend"; \
+	else \
+		echo "⚠️  Backend chưa lên sau 60s (kiểm tra MySQL/DATABASE_URL) — vẫn chạy frontend"; \
+	fi; \
 	(cd frontend && pnpm dev) & \
 	wait
 

@@ -37,9 +37,9 @@ const config: Config = {
         danger: '#EF4444',
       },
       fontFamily: {
-        // Quicksand cho UI; Huninn riêng cho chữ Hán (font-han).
+        // Quicksand cho UI; Noto Sans SC cho chữ Hán (font-han).
         sans: ['var(--font-quicksand)', 'system-ui', 'sans-serif'],
-        han: ['var(--font-han)', 'var(--font-quicksand)', 'serif'],
+        han: ['var(--font-han)', 'sans-serif'],
       },
       borderRadius: {
         xl: '1rem',

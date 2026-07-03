@@ -3,10 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 import { UsersModule } from './users/users.module';
-import { DecksModule } from './decks/decks.module';
-import { CardsModule } from './cards/cards.module';
-import { QuizModule } from './quiz/quiz.module';
-import { ProgressModule } from './progress/progress.module';
+import { AuthModule } from './auth/auth.module';
+import { PracticeModule } from './practice/practice.module';
+import { HomeModule } from './home/home.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -15,10 +14,9 @@ import { HealthController } from './health/health.controller';
     PrismaModule,
     RedisModule,
     UsersModule,
-    DecksModule,
-    CardsModule,
-    QuizModule,
-    ProgressModule,
+    AuthModule,
+    PracticeModule,
+    HomeModule,
   ],
   controllers: [HealthController],
 })

@@ -39,7 +39,7 @@ export default function Home() {
           <img
             src="/img/svg/Migii.svg"
             alt="migii"
-            className="w-[160px]"
+            className="w-40"
             onError={(e) => {
               const t = e.target as HTMLImageElement;
               t.outerHTML = '<span style="color:#fff;font-weight:800;font-size:56px;font-family:var(--font-quicksand)">migii</span>';

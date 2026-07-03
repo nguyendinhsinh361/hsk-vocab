@@ -292,6 +292,8 @@ model User {
   email          String    @unique
   /// Tên hiển thị.
   name           String
+  /// Mật khẩu đã băm (scrypt: "salt:hash"); NULL nếu đăng nhập qua social.
+  passwordHash   String?
   /// Ảnh đại diện (URL), nếu có.
   avatar         String?
   /// Điểm kinh nghiệm tích luỹ.
@@ -343,6 +345,8 @@ model PracticeSession {
   userId       String
   /// Chủ đề luyện tập (tuỳ chọn).
   topicId      String?
+  /// Gốc từ luyện tập (tuỳ chọn) — phiên theo gốc.
+  rootId       String?
   /// Tổng số câu trong phiên.
   total        Int       @default(0)
   /// Số câu trả lời đúng.
@@ -358,6 +362,8 @@ model PracticeSession {
   answers PracticeAnswer[]
 
   @@index([userId])
+  @@index([topicId])
+  @@index([rootId])
 }
 
 /// Đáp án của người dùng cho từng câu trong phiên luyện tập.
