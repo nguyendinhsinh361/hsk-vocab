@@ -130,6 +130,19 @@ export interface PracticeResult {
   explanation: string;
 }
 
+/** 1 dòng lịch sử luyện tập — GET /practice/history. */
+export interface PracticeHistoryItem {
+  id: string;
+  rootHz: string | null;
+  rootHv: string | null;
+  topicTitle: string | null;
+  correct: number;
+  total: number;
+  xpEarned: number;
+  completedAt: string | null;
+  createdAt: string;
+}
+
 /** Kết quả hoàn thành phiên — POST /practice/complete. */
 export interface PracticeComplete {
   correct: number;

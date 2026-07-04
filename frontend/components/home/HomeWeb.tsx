@@ -14,6 +14,7 @@ import type { HomeData, RootMini, TopicGroup, UserProfile } from '@/lib/types';
 import { cn } from '@/lib/cn';
 import { clearSession, getStoredUser } from '@/lib/session';
 import { ErrorState } from '@/components/common/ErrorState';
+import { BrandBackdrop } from '@/components/common/BrandBackdrop';
 
 // Gradient teal chuẩn Figma (Home Card + icon).
 const CARD_GRADIENT =
@@ -45,7 +46,9 @@ export default function HomeWeb({
   const [page, setPage] = useState(0);
   const [rootPage, setRootPage] = useState(0);
   return (
-    <div className="flex h-[100dvh] w-full bg-white overflow-hidden">
+    <div className="relative h-[100dvh] w-full overflow-hidden bg-white">
+      <BrandBackdrop />
+      <div className="relative z-10 flex h-full w-full">
       <Sidebar active="/home" />
       <main className="flex-1 h-full overflow-y-auto px-6 py-6">
         {error && <ErrorState detail={`API: ${error}`} onRetry={onRetry} />}
@@ -55,7 +58,7 @@ export default function HomeWeb({
           <div className="w-full">
             <header className="mb-5">
               <h1 className="font-sans font-bold text-[1.75rem] leading-[2.375rem] tracking-[-0.0125rem] text-neutral-900">
-                Chào bạn! <span>👋</span>
+                Chào bạn!
               </h1>
               <p className="font-sans font-medium text-base text-neutral-500">
                 Khám phá thế giới từ vựng ngay!
@@ -86,19 +89,21 @@ export default function HomeWeb({
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 }
 
 /* ------------------------------ Sidebar ------------------------------ */
 export function Sidebar({ active = '/home' }: { active?: string }) {
+  // icon: '' — chỗ trống để bổ sung icon theo style riêng sau này.
   const nav = [
-    { label: 'Trang chủ', icon: '🏠', href: '/home' },
-    { label: 'Nạp VIP', icon: '💎', href: '/premium' },
-    { label: 'Hồ sơ', icon: '👤', href: '/profile' },
+    { label: 'Trang chủ', icon: '', href: '/home' },
+    { label: 'Nạp VIP', icon: '', href: '/premium' },
+    { label: 'Hồ sơ', icon: '', href: '/profile' },
   ].map((n) => ({ ...n, active: n.href === active }));
   return (
-    <aside className="hidden md:flex h-full w-[13.75rem] xl:w-[17rem] shrink-0 flex-col overflow-y-auto no-scrollbar border-r border-neutral-200 bg-white px-4 xl:px-5 pt-11 pb-6">
+    <aside className="hidden md:flex h-[calc(100dvh-1.5rem)] my-3 ml-3 w-[13.75rem] xl:w-[17rem] shrink-0 flex-col overflow-y-auto no-scrollbar rounded-2xl border border-neutral-200 shadow-soft bg-white px-4 xl:px-5 pt-8 pb-6">
       <div className="px-2 mb-9 font-sans font-extrabold text-2xl text-primary-700">
         migii
       </div>
@@ -114,7 +119,7 @@ export function Sidebar({ active = '/home' }: { active?: string }) {
                 : 'text-neutral-500 hover:bg-neutral-100',
             )}
           >
-            <span className="text-lg">{n.icon}</span>
+            {n.icon && <span className="text-lg">{n.icon}</span>}
             <span className="flex-1">{n.label}</span>
             {n.active && (
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -479,12 +484,11 @@ function TopicCard({
 
       {/* trái: icon trên, tiêu đề + số dưới */}
       <div className="flex-1 min-w-0 flex flex-col justify-center gap-3">
+        {/* Khung icon nhóm gốc — để trống, bổ sung icon theo style riêng sau. */}
         <div
           className="flex size-12 items-center justify-center rounded-full border-b-[0.1875rem] shrink-0"
           style={{ backgroundImage: accent.grad, borderBottomColor: accent.bBottom }}
-        >
-          <span className="text-2xl">{accent.icon}</span>
-        </div>
+        />
         <div>
           <p className="font-sans font-bold text-lg leading-[1.625rem] text-neutral-900 truncate">
             {topic.title}

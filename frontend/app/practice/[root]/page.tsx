@@ -15,6 +15,7 @@ import { TeachScreen } from '@/components/practice/TeachScreen';
 import { PatternScreen } from '@/components/practice/PatternScreen';
 import { QuizScreen } from '@/components/practice/QuizScreen';
 import { SummaryScreen } from '@/components/practice/SummaryScreen';
+import { BrandBackdrop } from '@/components/common/BrandBackdrop';
 
 export default function PracticeFlowPage({
   params,
@@ -37,8 +38,9 @@ export default function PracticeFlowPage({
 
   return (
     <div className="relative min-h-[100dvh] w-full bg-white">
+      <BrandBackdrop />
       {/* Mobile: cột 430px. Desktop: full-width, panel nội dung tự căn giữa (Figma web). */}
-      <div className="relative mx-auto min-h-[100dvh] w-full max-w-[26.875rem] md:max-w-none bg-white">
+      <div className="relative z-10 mx-auto min-h-[100dvh] w-full max-w-[26.875rem] md:max-w-none bg-transparent">
         {f.phase !== 'summary' && (
           <div className="absolute left-0 top-0 z-20 w-full px-4 md:px-8 pt-4 md:pt-6 flex justify-center">
             <div className="flex items-center gap-3 md:gap-4 w-full max-w-[26.875rem] md:max-w-[56rem]">

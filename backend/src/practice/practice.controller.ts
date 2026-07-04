@@ -33,4 +33,9 @@ export class PracticeController {
   complete(@Body() dto: PracticeCompleteInput, @CurrentUserId() userId: string) {
     return this.practice.complete(dto.sessionId, userId);
   }
+
+  @Get('history')
+  history(@CurrentUserId() userId: string) {
+    return this.practice.history(userId);
+  }
 }

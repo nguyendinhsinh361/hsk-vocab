@@ -7,26 +7,36 @@
 
 import { useRouter } from 'next/navigation';
 
+/** Màn thành công — MOBILE: modal trên backdrop mờ. */
 export function SuccessScreen() {
-  const router = useRouter();
   return (
     <div className="w-full min-h-[100dvh] flex items-center justify-center bg-neutral-900/50 px-6">
-      <div className="w-full max-w-[21.4375rem] rounded-[1.5rem] bg-white px-6 pt-7 pb-6 flex flex-col items-center shadow-[0_1.25rem_2.5rem_-0.75rem_rgba(15,23,42,0.35)]">
-        <Celebration />
-        <h1 className="mt-5 font-sans font-bold text-xl text-neutral-800 text-center">
-          Thanh toán thành công!
-        </h1>
-        <p className="mt-2 font-sans text-sm leading-snug text-neutral-500 text-center">
-          Bạn đã nạp lần đầu thành công, luyện tập để lên trình độ vù vù nào.
-        </p>
-        <button
-          type="button"
-          onClick={() => router.push('/home')}
-          className="mt-6 w-full h-12 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base active:translate-y-[0.0625rem]"
-        >
-          Chiến nào
-        </button>
+      <div className="w-full max-w-[21.4375rem] rounded-[1.5rem] bg-white px-6 pt-7 pb-6 shadow-[0_1.25rem_2.5rem_-0.75rem_rgba(15,23,42,0.35)]">
+        <SuccessCard />
       </div>
+    </div>
+  );
+}
+
+/** Nội dung thành công (dùng chung mobile + desktop): minh hoạ + lời chúc + CTA. */
+export function SuccessCard() {
+  const router = useRouter();
+  return (
+    <div className="flex flex-col items-center px-2 py-2 md:px-6 md:py-4">
+      <Celebration />
+      <h1 className="mt-5 font-sans font-bold text-xl md:text-2xl text-neutral-800 text-center">
+        Thanh toán thành công!
+      </h1>
+      <p className="mt-2 font-sans text-sm md:text-base leading-snug text-neutral-500 text-center">
+        Bạn đã nạp lần đầu thành công, luyện tập để lên trình độ vù vù nào.
+      </p>
+      <button
+        type="button"
+        onClick={() => router.push('/home')}
+        className="mt-6 w-full h-12 md:h-14 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base md:text-lg active:translate-y-[0.0625rem]"
+      >
+        Chiến nào
+      </button>
     </div>
   );
 }

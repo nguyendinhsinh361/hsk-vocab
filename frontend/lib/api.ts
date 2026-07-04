@@ -3,6 +3,7 @@ import type {
   PracticeSession,
   PracticeResult,
   PracticeComplete,
+  PracticeHistoryItem,
   HomeData,
 } from './types';
 import { getUserId } from './session';
@@ -71,4 +72,8 @@ export const api = {
       headers: headers(true),
       body: JSON.stringify({ sessionId }),
     }),
+
+  // Lịch sử luyện tập của user.
+  practiceHistory: () =>
+    req<PracticeHistoryItem[]>('/practice/history', { headers: headers() }),
 };

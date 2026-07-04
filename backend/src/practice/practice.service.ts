@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import type {
   PracticeAnswerDto,
   PracticeCompleteDto,
+  PracticeHistoryItemDto,
   PracticeSessionDto,
   PracticeStep,
   QuizStep,
@@ -280,6 +281,55 @@ export class PracticeService {
     }
 
     return { correct, total, xpEarned, totalXp, level, streak };
+  }
+
+  /** Lịch sử luyện tập của user: các phiên đã hoàn thành, mới nhất trước. */
+  async history(userId = ''): Promise<PracticeHistoryItemDto[]> {
+    const resolvedUserId = await this.users.resolveUserId(userId);
+    const p = this.prisma as any;
+
+    const rows = await p.practiceSession.findMany({
+      where: { userId: resolvedUserId, completedAt: { not: null } },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+      select: {
+        id: true,
+        rootId: true,
+        topicId: true,
+        total: true,
+        correctCount: true,
+        xpEarned: true,
+        completedAt: true,
+        createdAt: true,
+      },
+    });
+
+    const rootIds = [...new Set(rows.map((r: any) => r.rootId).filter(Boolean))];
+    const topicIds = [...new Set(rows.map((r: any) => r.topicId).filter(Boolean))];
+    const roots = rootIds.length
+      ? await p.root.findMany({ where: { id: { in: rootIds } }, select: { id: true, hz: true, hv: true } })
+      : [];
+    const topics = topicIds.length
+      ? await p.topic.findMany({ where: { id: { in: topicIds } }, select: { id: true, title: true } })
+      : [];
+    const rootMap = new Map<string, any>(roots.map((r: any) => [r.id, r]));
+    const topicMap = new Map<string, any>(topics.map((t: any) => [t.id, t]));
+
+    return rows.map((r: any) => {
+      const root = r.rootId ? rootMap.get(r.rootId) : null;
+      const topic = r.topicId ? topicMap.get(r.topicId) : null;
+      return {
+        id: r.id,
+        rootHz: root?.hz ?? null,
+        rootHv: root ? cap(root.hv) : null,
+        topicTitle: topic ? vi(topic.title) : null,
+        correct: r.correctCount,
+        total: r.total,
+        xpEarned: r.xpEarned,
+        completedAt: r.completedAt ? new Date(r.completedAt).toISOString() : null,
+        createdAt: new Date(r.createdAt).toISOString(),
+      };
+    });
   }
 
   /**

@@ -116,6 +116,21 @@ export interface PracticeAnswerDto {
   explanation: string;
 }
 
+/** 1 dòng lịch sử luyện tập của user. */
+export interface PracticeHistoryItemDto {
+  id: string;
+  /** Gốc từ đã luyện (nếu có). */
+  rootHz: string | null;
+  rootHv: string | null;
+  /** Chủ đề của phiên (nếu có). */
+  topicTitle: string | null;
+  correct: number;
+  total: number;
+  xpEarned: number;
+  completedAt: string | null;
+  createdAt: string;
+}
+
 /** Kết quả hoàn thành 1 phiên luyện tập (đã lưu DB). */
 export interface PracticeCompleteDto {
   /** Số câu đúng trong phiên. */

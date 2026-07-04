@@ -7,6 +7,7 @@ import { Home, Gem, User } from 'lucide-react';
 import type { HomeData, RootMini, TopicGroup } from '@/lib/types';
 import { cn } from '@/lib/cn';
 import { ErrorState } from '@/components/common/ErrorState';
+import { BrandBackdrop } from '@/components/common/BrandBackdrop';
 import { SwipeCarousel } from './SwipeCarousel';
 
 const ACCENTS = ['#EF5350', '#42A5F5', '#F59E0B', '#00B2A5', '#785BFF'];
@@ -22,7 +23,8 @@ export default function HomeMobile({
 }) {
   return (
     <div className="relative w-full h-[100dvh] overflow-hidden bg-white">
-      <div className="absolute inset-0 overflow-y-auto px-4 pt-6 pb-24">
+      <BrandBackdrop />
+      <div className="absolute inset-0 z-10 overflow-y-auto px-4 pt-6 pb-24">
         {error && <ErrorState detail={`API: ${error}`} onRetry={onRetry} />}
         {!data && !error && (
           <p className="mt-10 text-center text-neutral-400 text-sm">Đang tải…</p>
@@ -32,7 +34,7 @@ export default function HomeMobile({
           <>
             <header className="mb-4">
               <h1 className="font-sans font-bold text-2xl text-neutral-900">
-                Chào bạn! <span className="align-middle">👋</span>
+                Chào bạn!
               </h1>
               <p className="mt-0.5 font-sans text-sm text-neutral-500">
                 Bắt đầu đặt những viên gạch đầu tiên nào
@@ -129,9 +131,8 @@ function TopicCard({ topic, accent }: { topic: TopicGroup; accent: string }) {
           Đang học
         </span>
       )}
-      <div className="size-9 rounded-full flex items-center justify-center" style={{ backgroundColor: `${accent}22` }}>
-        <span className="text-lg">🌱</span>
-      </div>
+      {/* Khung icon nhóm gốc — để trống, bổ sung icon theo style riêng sau. */}
+      <div className="size-9 rounded-full" style={{ backgroundColor: `${accent}22` }} />
       <div>
         <p className="font-sans font-semibold text-[0.9375rem] text-neutral-900">{topic.title}</p>
         <div className="mt-0.5 flex items-center justify-between">
