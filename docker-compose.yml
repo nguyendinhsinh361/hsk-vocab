@@ -1,5 +1,11 @@
-# DEV local: chỉ chạy Redis (cache) bằng docker.
-# MySQL 8.0 dùng instance NGOÀI (không docker). Deploy production do team system đảm nhận.
+# Migii HSK Vocab — chạy Redis + Backend + Frontend bằng Docker.
+# MySQL nằm ở SERVER RIÊNG (không chạy trong docker) → truyền qua DATABASE_URL.
+#
+# Dùng:
+#   1) Tạo file .env ở thư mục gốc với DATABASE_URL (+ JWT_SECRET) — xem .env.docker.example
+#   2) docker compose up -d --build   (backend tự chạy `prisma migrate deploy` khi khởi động)
+#   3) (chỉ khi DB đã có sẵn bảng do db push, chưa có _prisma_migrations) make docker-baseline
+#   4) (lần đầu, nếu DB trống) make docker-seed
 services:
   redis:
     image: redis:7-alpine
@@ -10,5 +16,47 @@ services:
       - redis-data:/data
     restart: unless-stopped
 
+  backend:
+    build:
+      context: ./backend
+    container_name: migii-backend
+    depends_on:
+      redis:
+        condition: service_started
+    environment:
+      # MySQL ở server riêng — BẮT BUỘC đặt trong .env (thư mục gốc).
+      # Nếu DB nằm trên chính máy chạy docker: dùng host.docker.internal thay cho localhost.
+      DATABASE_URL: "${DATABASE_URL:?Thiếu DATABASE_URL — đặt trong .env ở thư mục gốc}"
+      REDIS_URL: "redis://redis:6379"
+      PORT: "4000"
+      FRONTEND_URL: "${FRONTEND_URL:-http://localhost:3000}"
+      JWT_SECRET: "${JWT_SECRET:-doi-secret-nay-trong-production}"
+      ASSETS_DIR: "/app/assets"
+    # Cho phép container gọi DB chạy trên chính host (host.docker.internal) — Linux cần dòng này.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "4000:4000"
+    volumes:
+      - backend-assets:/app/assets
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      # Next rewrites (proxy /api) là BUILD-TIME → truyền BACKEND_URL lúc build.
+      args:
+        BACKEND_URL: "http://backend:4000"
+    container_name: migii-frontend
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: "http://backend:4000"
+      PORT: "3000"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
 volumes:
   redis-data:
+  backend-assets:

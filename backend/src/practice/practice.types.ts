@@ -93,9 +93,31 @@ export interface QuizStep {
   /** Đáp án đúng dạng chữ (variant='input'). */
   answerText?: string;
   explanation: string;
+  /** M3 bài 1: hiển thị kèm cảnh báo "dễ nhầm" (spec BNPD sheet 07). */
+  confusionWarning?: boolean;
+  /** Từ đã học: trả lời sai → đưa vào hàng đợi ôn tập (spec BNPD sheet 06). */
+  reviewOnWrong?: boolean;
 }
 
-export type PracticeStep = TeachStep | PatternStep | QuizStep;
+/** 1 cặp trong bài nối từ. */
+export interface MatchPair {
+  wordId: string;
+  hz: string;
+  py: string;
+  meaning: string;
+}
+
+/**
+ * MATCH — bài D3 "Nối từ" tổng kết (spec BNPD: luôn là bài cuối cùng).
+ * FE chấm cục bộ (nối đủ cặp thì qua), không tính vào điểm QUIZ.
+ */
+export interface MatchStep {
+  kind: 'MATCH';
+  title: string;
+  pairs: MatchPair[];
+}
+
+export type PracticeStep = TeachStep | PatternStep | QuizStep | MatchStep;
 
 /** Payload trả về cho FE khi bắt đầu 1 phiên luyện tập. */
 export interface PracticeSessionDto {

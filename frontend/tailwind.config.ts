@@ -48,6 +48,16 @@ const config: Config = {
       boxShadow: {
         soft: '0 1px 2px rgba(15,23,42,0.04), 0 10px 30px -16px rgba(15,23,42,0.18)',
       },
+      // Gradient brand (Figma) — dùng bg-card-teal / bg-progress-teal / bg-badge-teal,
+      // KHÔNG hardcode chuỗi linear-gradient trong component.
+      backgroundImage: {
+        'card-teal':
+          'linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 100%), linear-gradient(180deg, #21C99D 0%, #11BD9E 50%, #00B2A5 100%)',
+        'progress-teal': 'linear-gradient(-34.6deg, #12D18E 0%, #71E3BB 100%)',
+        'badge-teal': 'linear-gradient(-44.6deg, #12D18E 0%, #71E3BB 100%)',
+        'splash-teal':
+          'linear-gradient(160deg, #21C99D 0%, #11BD9E 45%, #00B2A5 100%)',
+      },
     },
   },
   plugins: [],

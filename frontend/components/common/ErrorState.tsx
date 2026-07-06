@@ -47,7 +47,7 @@ export function ErrorState({
         <button
           type="button"
           onClick={onRetry}
-          className="mt-7 inline-flex items-center gap-2 h-12 px-7 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white font-sans font-semibold text-base active:translate-y-[0.0625rem] transition"
+          className="mt-7 inline-flex items-center gap-2 h-12 px-7 rounded-full bg-primary border-b-4 border-[#008f85] text-white font-sans font-semibold text-base active:translate-y-[0.0625rem] transition"
         >
           <RefreshCw size={18} />
           Thử lại

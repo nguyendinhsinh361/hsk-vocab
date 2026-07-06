@@ -34,9 +34,9 @@ export function TransferScreen() {
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-primary-100/40">
+    <div className="flex min-h-0 flex-1 flex-col">
       {/* Header */}
-      <div className="relative shrink-0 bg-primary-100 px-4 pt-4 pb-3 sm:py-5 flex items-center justify-center">
+      <div className="relative shrink-0 px-4 pt-4 pb-3 sm:py-5 flex items-center justify-center">
         <button
           type="button"
           onClick={() => router.back()}
@@ -131,16 +131,14 @@ export function TransferScreen() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* CTA xác nhận — dính đáy */}
-      <div className="shrink-0 w-full px-4 sm:px-8 pb-6 sm:pb-5 pt-3 sm:pt-4 flex justify-center border-t border-neutral-200/70 bg-white">
+        {/* CTA — cuộn cùng nội dung (tách khỏi menu dưới) */}
         <button
           type="button"
           onClick={() => router.push('/premium/success')}
-          className="w-full max-w-[21.4375rem] sm:max-w-[24rem] h-12 sm:h-14 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base active:translate-y-[0.0625rem]"
+          className="mt-1 w-full h-12 sm:h-14 rounded-full bg-primary border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base sm:text-lg active:translate-y-[0.0625rem]"
         >
-          Xác nhận thanh toán bank
+          Xác nhận thanh toán
         </button>
       </div>
     </div>

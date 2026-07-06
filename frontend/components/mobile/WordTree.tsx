@@ -54,14 +54,14 @@ export function WordTree({ shiftY = 0 }: { shiftY?: number }) {
         </div>
         {/* Thẻ gốc 人 */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 top-[19rem] w-[8.25rem] bg-white border border-[#00b2a5] border-b-[0.1875rem] rounded-[7.25rem] p-3 flex flex-col items-center gap-1.5"
+          className="absolute left-1/2 -translate-x-1/2 top-[19rem] w-[8.25rem] bg-white border border-primary border-b-[0.1875rem] rounded-[7.25rem] p-3 flex flex-col items-center gap-1.5"
           style={{ filter: 'drop-shadow(0 0 1.125rem rgba(0,178,165,0.28))' }}
         >
-          <div className="size-9 rounded-full bg-[#00b2a5] flex items-center justify-center">
+          <div className="size-9 rounded-full bg-primary flex items-center justify-center">
             <span className="font-han font-bold text-white text-2xl leading-[1.875rem]" lang="zh">人</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="font-sans font-medium text-sm leading-5 text-[#1976d2]">rén</span>
+            <span className="font-sans font-medium text-sm leading-5 text-blue-700">rén</span>
             <span className="font-sans font-medium text-sm leading-5 text-neutral-800 whitespace-nowrap">nhân - người</span>
           </div>
           <div className="bg-neutral-100 rounded-[0.75rem] px-2 py-0.5">

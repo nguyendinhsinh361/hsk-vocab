@@ -26,7 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi" className={quicksand.variable}>
+    // suppressHydrationWarning: bỏ cảnh báo hydrate do TIỆN ÍCH trình duyệt
+    // (Grammarly, Bitdefender…) chèn thuộc tính vào html/body trước khi React chạy.
+    <html lang="vi" className={quicksand.variable} suppressHydrationWarning>
       <head>
         {/* Font Hán: Noto Sans SC (phủ đủ giản thể, nét 400/500/700) → --font-han. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,7 +38,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

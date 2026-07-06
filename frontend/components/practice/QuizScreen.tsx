@@ -7,7 +7,6 @@ import { WordHead } from './WordHead';
 import { OptionButton } from './OptionButton';
 import { ExplanationPanel } from './ExplanationPanel';
 import { BottomCta } from './BottomCta';
-import { FormulaText } from './FormulaText';
 import { HanziText } from './HanziText';
 
 /** Màn Test — generic đa dạng bài (mcq / đúng-sai / gõ chữ / nghe). */
@@ -45,11 +44,18 @@ export function QuizScreen({
 
   return (
     <>
-      <div className="absolute inset-0 overflow-y-auto px-4 md:px-8 pt-[5.75rem] md:pt-24 pb-[6.875rem] flex flex-col md:items-center">
-        <div className="w-full md:max-w-[56rem] md:rounded-3xl md:border md:border-neutral-200 md:bg-white md:shadow-soft md:p-10 flex flex-col gap-5 md:gap-7">
+      <div className="absolute inset-0 overflow-y-auto px-2 md:px-8 pt-[5.75rem] md:pt-24 pb-[6.875rem] flex flex-col md:items-center">
+        <div className="w-full rounded-3xl border border-neutral-200 bg-white shadow-soft p-4 md:max-w-[84rem] md:p-12 md:min-h-[calc(100dvh-13rem)] flex flex-col gap-5 md:gap-8">
           <h2 className="text-center font-sans font-bold text-lg md:text-2xl text-neutral-800">
             {step.title}
           </h2>
+
+          {/* M3: cảnh báo từ có âm Hán Việt dễ nhầm (spec BNPD) */}
+          {step.confusionWarning && (
+            <div className="-mt-2 mx-auto inline-flex items-center gap-1.5 rounded-full bg-danger/10 border border-danger/25 px-3 py-1 font-sans font-semibold text-xs text-danger">
+              <span aria-hidden>⚠</span> Từ dễ nhầm — chú ý phân biệt
+            </div>
+          )}
 
           {/* Đề bài: từ đơn / nghe / khối câu */}
           {step.word ? (
@@ -148,7 +154,7 @@ function QuestionBlock({ text }: { text: string }) {
   );
 }
 
-/** Đề bài ĐIỀN TRỐNG: nhãn gợi ý + câu Hán lớn + dòng pinyin mờ, ô trống bo tròn. */
+/** Đề bài ĐIỀN TRỐNG: nhãn gợi ý + câu Hán (ruby pinyin trên đầu) + ô trống bo tròn. */
 function FillBlankBlock({ text }: { text: string }) {
   const lines = text
     .split('\n')
@@ -161,6 +167,9 @@ function FillBlankBlock({ text }: { text: string }) {
     prompt = lines[0].replace(/:$/, '');
     body = lines.slice(1);
   }
+  // Bỏ dòng phiên âm pinyin thuần — ruby đã hiện pinyin trên chữ Hán.
+  body = body.filter((l) => lineHasHan(l) || !PINYIN_MARK.test(l));
+
   return (
     <div className="rounded-2xl border border-primary-200 bg-primary-100/40 p-5 md:p-8 flex flex-col items-center gap-4">
       {prompt && (
@@ -172,25 +181,34 @@ function FillBlankBlock({ text }: { text: string }) {
           {prompt}
         </span>
       )}
-      <div className="flex flex-col items-center gap-2">
-        {body.map((line, i) => {
-          const isPinyin = !lineHasHan(line) && PINYIN_MARK.test(line);
-          return (
-            <p
-              key={i}
-              className={cn(
-                'text-center leading-relaxed',
-                isPinyin
-                  ? 'font-sans text-sm md:text-base italic text-neutral-400'
-                  : 'font-han text-2xl md:text-[1.75rem] font-semibold text-neutral-900',
-              )}
-            >
-              <FormulaText text={line} />
-            </p>
-          );
-        })}
+      <div className="flex flex-col items-center gap-3">
+        {body.map((line, i) => (
+          <BlankLine key={i} line={line} />
+        ))}
       </div>
     </div>
+  );
+}
+
+/** 1 dòng câu điền trống: chữ Hán có ruby pinyin + ô trống dạng gạch nét đứt. */
+function BlankLine({ line }: { line: string }) {
+  // Bỏ pinyin trong ngoặc [..] (ruby tự sinh), gộp khoảng trắng thừa.
+  const clean = line.replace(/[[(（【][^\])）】]*[\])）】]/g, '').replace(/[ \t]{2,}/g, ' ');
+  const parts = clean.split(/(_+)/);
+  return (
+    <p className="text-center leading-relaxed font-han text-2xl md:text-[1.75rem] font-semibold text-neutral-900">
+      {parts.map((p, i) =>
+        /^_+$/.test(p) ? (
+          <span
+            key={i}
+            aria-hidden
+            className="inline-block align-middle mx-1.5 h-[1.4em] w-11 rounded-lg border-2 border-dashed border-primary-400 bg-primary-100/70"
+          />
+        ) : (
+          <HanziText key={i} text={p} size="lg" preserve className="align-middle" />
+        ),
+      )}
+    </p>
   );
 }
 
@@ -209,7 +227,7 @@ function AudioPrompt({ text }: { text: string }) {
         type="button"
         onClick={speak}
         aria-label="Phát âm"
-        className="size-24 rounded-full bg-[#00b2a5] text-white flex items-center justify-center shadow-soft active:translate-y-px"
+        className="size-24 rounded-full bg-primary text-white flex items-center justify-center shadow-soft active:translate-y-px"
       >
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M11 5 6 9H2v6h4l5 4V5z" />

@@ -34,11 +34,11 @@ export default function ExampleScreen() {
           </div>
           <span className="font-sans font-bold text-xl text-neutral-400">=</span>
           <div className="w-full bg-white rounded-xl border border-neutral-200 py-4 flex items-center justify-center shadow-soft">
-            <span className="font-sans font-bold text-[1.75rem] text-[#00b2a5]">Điện thoại</span>
+            <span className="font-sans font-bold text-[1.75rem] text-primary">Điện thoại</span>
           </div>
         </div>
         <div className="absolute bottom-0 left-0 w-full px-4 pb-6 flex justify-center z-20">
-          <Link href="/onboarding/level" className="w-full max-w-[21.4375rem] h-12 bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-base text-white">
+          <Link href="/onboarding/level" className="w-full max-w-[21.4375rem] h-12 bg-primary border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-base text-white">
             Tiếp tục
           </Link>
         </div>

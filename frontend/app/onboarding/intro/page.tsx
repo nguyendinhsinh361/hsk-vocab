@@ -28,7 +28,7 @@ export default function IntroScreen() {
           <p className="font-sans font-medium text-base leading-6 tracking-[-0.0112rem] text-neutral-900">Đoán được hàng chục từ mới</p>
         </div>
         <div className="absolute bottom-0 left-0 w-full px-4 pb-6 flex justify-center z-20">
-          <Link href="/onboarding/example" className="w-full max-w-[21.4375rem] h-12 bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-base text-white">
+          <Link href="/onboarding/example" className="w-full max-w-[21.4375rem] h-12 bg-primary border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-base text-white">
             Tiếp tục
           </Link>
         </div>

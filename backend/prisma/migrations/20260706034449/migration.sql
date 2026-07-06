@@ -144,8 +144,12 @@ CREATE TABLE `UserWordProgress` (
     `correctCount` INTEGER NOT NULL DEFAULT 0,
     `seenCount` INTEGER NOT NULL DEFAULT 0,
     `lastSeenAt` DATETIME(3) NULL,
+    `dueAt` DATETIME(3) NULL,
+    `reviewInterval` INTEGER NOT NULL DEFAULT 0,
+    `lapses` INTEGER NOT NULL DEFAULT 0,
 
     INDEX `UserWordProgress_userId_idx`(`userId`),
+    INDEX `UserWordProgress_userId_dueAt_idx`(`userId`, `dueAt`),
     UNIQUE INDEX `UserWordProgress_userId_wordId_key`(`userId`, `wordId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -174,6 +178,7 @@ CREATE TABLE `PracticeAnswer` (
     `sessionId` VARCHAR(191) NOT NULL,
     `exerciseId` VARCHAR(191) NOT NULL,
     `isCorrect` BOOLEAN NOT NULL,
+    `answer` TEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `PracticeAnswer_sessionId_idx`(`sessionId`),

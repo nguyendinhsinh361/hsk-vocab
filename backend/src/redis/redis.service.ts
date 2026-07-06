@@ -47,7 +47,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   /** Ghi JSON kèm TTL (giây); lỗi → bỏ qua. */
-  async setJson(key: string, value: unknown, ttlSeconds: number): Promise<void> {
+  async setJson(
+    key: string,
+    value: unknown,
+    ttlSeconds: number,
+  ): Promise<void> {
     try {
       await this.client?.set(key, JSON.stringify(value), 'EX', ttlSeconds);
     } catch {

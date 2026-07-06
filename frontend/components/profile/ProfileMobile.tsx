@@ -72,7 +72,7 @@ export default function ProfileMobile({
                 <span className="font-sans text-sm text-primary-700">{pct}%</span>
               </div>
               <div className="mt-3 h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
-                <div className="h-full rounded-full bg-[#00b2a5]" style={{ width: `${pct}%` }} />
+                <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
               </div>
               <p className="mt-2 font-sans text-xs text-neutral-400">
                 Đã học {user?.learnedRoots ?? 0}/{user?.totalRoots ?? 0} gốc từ
@@ -190,10 +190,11 @@ function HistoryRow({ item }: { item: PracticeHistoryItem }) {
     : item.topicTitle ?? 'Phiên luyện tập';
   const when = new Date(item.completedAt ?? item.createdAt);
   const dateStr = when.toLocaleString('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white p-3">

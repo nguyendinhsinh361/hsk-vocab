@@ -27,6 +27,8 @@ export interface HomeData {
     /** Số gốc đã học / tổng số gốc (thanh tiến trình). */
     learnedRoots: number;
     totalRoots: number;
+    /** Số từ đến hạn ôn tập (card "Ôn tập X từ"). */
+    reviewDue: number;
   };
   /** Thẻ "Học tiếp" — nhóm đang học + 1 gốc gợi ý. */
   continueLearning: {

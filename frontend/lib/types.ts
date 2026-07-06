@@ -35,6 +35,8 @@ export interface HomeData {
     level: number;
     learnedRoots: number;
     totalRoots: number;
+    /** Số từ đến hạn ôn tập. */
+    reviewDue: number;
   };
   continueLearning: { topicTitle: string; root: RootMini } | null;
   topicGroups: TopicGroup[];
@@ -111,9 +113,28 @@ export interface QuizStep {
   answerIndex: number;
   answerText?: string;
   explanation: string;
+  /** M3 bài 1: hiển thị kèm cảnh báo "dễ nhầm". */
+  confusionWarning?: boolean;
+  /** Từ đã học: sai → hàng đợi ôn tập (BE dùng, FE chưa cần xử lý). */
+  reviewOnWrong?: boolean;
 }
 
-export type PracticeStep = TeachStep | PatternStep | QuizStep;
+/** 1 cặp trong bài nối từ. */
+export interface MatchPair {
+  wordId: string;
+  hz: string;
+  py: string;
+  meaning: string;
+}
+
+/** MATCH — bài D3 "Nối từ" tổng kết (luôn cuối). FE chấm cục bộ. */
+export interface MatchStep {
+  kind: 'MATCH';
+  title: string;
+  pairs: MatchPair[];
+}
+
+export type PracticeStep = TeachStep | PatternStep | QuizStep | MatchStep;
 
 export interface PracticeSession {
   sessionId: string;

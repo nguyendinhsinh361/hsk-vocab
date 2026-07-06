@@ -15,7 +15,7 @@ export function PatternScreen({
   return (
     <>
       <div className="absolute inset-0 overflow-y-auto px-4 pt-20 pb-[6.875rem] flex flex-col items-center gap-4">
-        <div className="size-20 rounded-full bg-[#00b2a5] flex items-center justify-center shadow-soft">
+        <div className="size-20 rounded-full bg-primary flex items-center justify-center shadow-soft">
           <span className="font-han font-bold text-[2.5rem] text-white" lang="zh">{step.hz}</span>
         </div>
         <p className="font-sans font-medium text-base text-neutral-500">
@@ -25,7 +25,7 @@ export function PatternScreen({
           {step.title}
         </h2>
 
-        <div className="w-full md:max-w-[56rem] flex flex-col gap-3">
+        <div className="w-full md:max-w-[84rem] flex flex-col gap-3">
           {step.patterns.map((pat, i) => (
             <div key={i} className="rounded-[1.25rem] bg-white border border-neutral-200 shadow-soft p-4 md:p-6">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-2">

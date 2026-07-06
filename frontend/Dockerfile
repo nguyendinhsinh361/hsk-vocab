@@ -10,6 +10,9 @@ RUN pnpm install --frozen-lockfile || pnpm install
 
 # --- build ---
 FROM base AS build
+# Next rewrites (proxy /api → backend) đọc BACKEND_URL lúc BUILD.
+ARG BACKEND_URL=http://backend:4000
+ENV BACKEND_URL=$BACKEND_URL
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN pnpm run build

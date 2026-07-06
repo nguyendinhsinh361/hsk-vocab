@@ -25,8 +25,14 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/prisma.config.ts ./
 COPY package.json ./
+# src + tsconfig để chạy seed bằng ts-node (seed.ts import từ ../src/*).
+COPY --from=build /app/src ./src
+COPY --from=build /app/tsconfig.json ./
 # assets tĩnh (audio/image) mount qua volume khi chạy; tạo sẵn thư mục.
 RUN mkdir -p /app/assets
 EXPOSE 4000
-# Migrate khi khởi động rồi chạy server (DB ngoài phải sẵn sàng).
+# Chạy migration đã review (migrate deploy — CHUẨN production, không mất dữ liệu) rồi start.
+# DB ở server riêng phải sẵn sàng qua DATABASE_URL.
+# LƯU Ý: nếu DB đã có sẵn bảng do `db push` (chưa có _prisma_migrations),
+# lần đầu phải baseline 1 lần: `make docker-baseline` (xem Makefile).
 CMD ["sh", "-c", "pnpm exec prisma migrate deploy && node dist/src/main"]

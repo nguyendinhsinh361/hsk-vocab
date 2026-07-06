@@ -2,7 +2,7 @@
 
 /** Khung desktop cho luồng thanh toán: Sidebar (navbar) + card căn giữa (giống màn Hồ sơ/Premium). */
 
-import { Sidebar } from '@/components/home/HomeWeb';
+import { Sidebar } from '@/components/layout/Sidebar';
 import { BrandBackdrop } from '@/components/common/BrandBackdrop';
 import { cn } from '@/lib/cn';
 

@@ -107,7 +107,7 @@ function LevelCard({ data }: { data: HomeData }) {
           </div>
           <Link
             href={`/practice/${continueLearning.root.id}`}
-            className="h-11 px-6 rounded-full bg-[#00b2a5] text-white font-sans font-semibold text-base flex items-center shrink-0"
+            className="h-11 px-6 rounded-full bg-primary text-white font-sans font-semibold text-base flex items-center shrink-0"
           >
             Học tiếp
           </Link>

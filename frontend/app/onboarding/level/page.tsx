@@ -47,15 +47,15 @@ export default function ChooseLevelScreen() {
                 onClick={() => setSelected(lv.id)}
                 className={cn(
                   'flex items-center gap-3 rounded-[1.25rem] border bg-white p-4 text-left transition-colors border-neutral-200',
-                  isSel && 'border-[#00b2a5] ring-2 ring-[#00b2a5]/25',
+                  isSel && 'border-primary ring-2 ring-primary/25',
                   !lv.available && 'opacity-60',
                 )}
               >
                 <img src={`/img/svg/${lv.icon}.svg`} alt="" className="w-9 h-9 object-contain shrink-0" />
                 <div className="flex-1 font-sans font-semibold text-base text-neutral-800">{lv.label}</div>
                 {lv.available ? (
-                  <span className={cn('size-[1.375rem] rounded-full border-2 flex items-center justify-center shrink-0', isSel ? 'border-[#00b2a5]' : 'border-neutral-300')}>
-                    {isSel && <span className="size-3 rounded-full bg-[#00b2a5]" />}
+                  <span className={cn('size-[1.375rem] rounded-full border-2 flex items-center justify-center shrink-0', isSel ? 'border-primary' : 'border-neutral-300')}>
+                    {isSel && <span className="size-3 rounded-full bg-primary" />}
                   </span>
                 ) : (
                   <img src="/img/svg/Comming-Soon.svg" alt="Coming soon" className="shrink-0 h-7 w-auto" />
@@ -65,7 +65,7 @@ export default function ChooseLevelScreen() {
           })}
         </div>
         <div className="absolute bottom-0 left-0 w-full px-4 pt-3 pb-6 flex justify-center z-20 bg-gradient-to-t from-white via-white/90 to-transparent">
-          <Link href="/onboarding" className="w-full max-w-[21.4375rem] h-12 bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-base text-white">
+          <Link href="/onboarding" className="w-full max-w-[21.4375rem] h-12 bg-primary border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-sans font-semibold text-base text-white">
             Tiếp tục
           </Link>
         </div>

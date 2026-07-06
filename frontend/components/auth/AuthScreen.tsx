@@ -38,10 +38,10 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
 
     setLoading(true);
     try {
-      const { user } = isRegister
+      const { user, accessToken } = isRegister
         ? await api.register(email, name, password)
         : await api.login(email, password);
-      setSession(user);
+      setSession(user, accessToken);
       router.push('/home');
     } catch (err) {
       setError(friendlyError((err as Error).message));
@@ -127,7 +127,7 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
             type="submit"
             disabled={loading}
             className={cn(
-              'mt-1 h-14 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white',
+              'mt-1 h-14 rounded-full bg-primary border-b-4 border-[#008f85] text-white',
               'font-sans font-semibold text-lg flex items-center justify-center',
               'active:translate-y-[0.0625rem] transition disabled:opacity-60',
             )}

@@ -330,11 +330,20 @@ model UserWordProgress {
   /// Lần gặp gần nhất.
   lastSeenAt   DateTime?
 
+  /* ---- HÀNG ĐỢI ÔN TẬP (spec BNPD: từ đã học trả lời sai) ---- */
+  /// Hạn ôn kế tiếp; NULL = không nằm trong hàng đợi.
+  dueAt          DateTime?
+  /// Khoảng cách (ngày) giữa 2 lần ôn — spaced repetition (1 → 2 → rời queue).
+  reviewInterval Int       @default(0)
+  /// Số lần rơi vào hàng đợi (trả lời sai bài reviewOnWrong).
+  lapses         Int       @default(0)
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
   @@unique([userId, wordId])
   @@index([userId])
+  @@index([userId, dueAt])
 }
 
 /// Một phiên luyện tập (theo chủ đề).
@@ -376,6 +385,8 @@ model PracticeAnswer {
   exerciseId String
   /// Trả lời đúng hay sai.
   isCorrect  Boolean
+  /// Đáp án người dùng đã chọn/gõ (option text hoặc chữ Hán nhập).
+  answer     String?  @db.Text
   /// Thời điểm trả lời.
   createdAt  DateTime @default(now())
 

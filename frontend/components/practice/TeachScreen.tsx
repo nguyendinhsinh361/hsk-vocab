@@ -27,8 +27,8 @@ export function TeachScreen({
 }) {
   return (
     <>
-      <div className="absolute inset-0 overflow-y-auto px-4 md:px-8 pt-[5.75rem] md:pt-24 pb-[6.875rem] flex flex-col md:items-center">
-        <div className="w-full md:max-w-[56rem] md:rounded-3xl md:border md:border-neutral-200 md:bg-white md:shadow-soft md:p-10 flex flex-col gap-5 md:gap-7">
+      <div className="absolute inset-0 overflow-y-auto px-2 md:px-8 pt-[5.75rem] md:pt-24 pb-[6.875rem] flex flex-col md:items-center">
+        <div className="w-full rounded-3xl border border-neutral-200 bg-white shadow-soft p-4 md:max-w-[84rem] md:p-12 md:min-h-[calc(100dvh-13rem)] flex flex-col gap-5 md:gap-8">
           <WordHead hz={step.hz} py={step.py} subtitle={step.meaning} />
           <CharBreakdown parts={step.parts} />
 

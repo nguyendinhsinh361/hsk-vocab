@@ -5,6 +5,10 @@ export class HealthController {
   // Public, plaintext — dùng cho healthcheck (docker / load balancer).
   @Get()
   check() {
-    return { status: 'ok', service: 'migii-hsk-backend', ts: new Date().toISOString() };
+    return {
+      status: 'ok',
+      service: 'migii-hsk-backend',
+      ts: new Date().toISOString(),
+    };
   }
 }

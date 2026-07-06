@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Gem, ChevronRight, Bell, Globe, HelpCircle, UserRound } from 'lucide-react';
 import type { HomeData, UserProfile, PracticeHistoryItem } from '@/lib/types';
-import { Sidebar } from '@/components/home/HomeWeb';
+import { Sidebar } from '@/components/layout/Sidebar';
 import { ErrorState } from '@/components/common/ErrorState';
 import { BrandBackdrop } from '@/components/common/BrandBackdrop';
 import { getStoredUser } from '@/lib/session';
@@ -83,8 +83,8 @@ export default function ProfileWeb({
               </div>
               <div className="mt-3 h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
                 <div
-                  className="h-full rounded-full"
-                  style={{ width: `${pct}%`, backgroundImage: 'linear-gradient(-34.6deg,#12D18E 0%,#71E3BB 100%)' }}
+                  className="h-full rounded-full bg-progress-teal"
+                  style={{ width: `${pct}%` }}
                 />
               </div>
               <p className="mt-2 font-sans text-sm text-neutral-400">
@@ -170,11 +170,11 @@ function HistoryRow({ item }: { item: PracticeHistoryItem }) {
     : item.topicTitle ?? 'Phiên luyện tập';
   const when = new Date(item.completedAt ?? item.createdAt);
   const dateStr = when.toLocaleString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
   });
   return (
     <div className="flex items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-4">

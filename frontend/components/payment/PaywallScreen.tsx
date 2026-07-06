@@ -63,8 +63,12 @@ export function PaywallScreen() {
 
         {/* PANEL TEAL — banner (mobile) / hero cột trái (desktop) */}
         <div className="relative z-10 shrink-0 h-[13.5rem] sm:h-[15.5rem] md:h-auto md:w-[42%] lg:w-[45%] overflow-hidden bg-primary-300 md:bg-transparent">
-          {/* Mobile: nền trời vẽ tay */}
-          <SkyBackground className="md:hidden" />
+          {/* Mobile: nền ảnh brand tablet-bg */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 md:hidden bg-cover bg-center"
+            style={{ backgroundImage: 'url(/img/tablet-bg.png)' }}
+          />
 
         {/* Hero — chỉ desktop, nội dung giới hạn bề rộng + căn giữa panel */}
         <div className="relative z-10 hidden h-full flex-col justify-center gap-7 px-8 py-12 lg:px-14 md:flex">
@@ -148,7 +152,7 @@ export function PaywallScreen() {
             <button
               type="button"
               onClick={() => router.push(`/premium/transfer?plan=${selected}`)}
-              className="w-full h-12 md:h-14 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base md:text-lg active:translate-y-[0.0625rem]"
+              className="w-full h-12 md:h-14 rounded-full bg-primary border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base md:text-lg active:translate-y-[0.0625rem]"
             >
               Tiếp tục
             </button>
@@ -194,47 +198,3 @@ function PlanCard({ plan, active, onSelect }: { plan: Plan; active: boolean; onS
   );
 }
 
-/** Nền trời với coin 子 nổi + mây (SVG nhẹ, khớp Figma). */
-function SkyBackground({ className }: { className?: string }) {
-  const coins = [
-    { x: '18%', y: '46%', size: 40, bg: '#2FA9E0' },
-    { x: '52%', y: '18%', size: 30, bg: '#F6C445' },
-    { x: '76%', y: '30%', size: 44, bg: '#F5851F' },
-    { x: '24%', y: '74%', size: 34, bg: '#5EC9C0' },
-    { x: '58%', y: '64%', size: 40, bg: '#F5851F' },
-    { x: '84%', y: '70%', size: 34, bg: '#7C6BF0' },
-  ];
-  return (
-    <div
-      className={cn('absolute inset-0', className)}
-      style={{ backgroundImage: 'linear-gradient(180deg,#7BD3CC 0%,#5EC9C0 100%)' }}
-    >
-      {/* mây */}
-      <div className="absolute left-6 top-10 h-3 w-16 rounded-full bg-white/70" />
-      <div className="absolute left-10 top-8 h-4 w-10 rounded-full bg-white/70" />
-      <div className="absolute right-10 top-16 h-3 w-14 rounded-full bg-white/60" />
-      <div className="absolute left-1/3 top-24 h-2.5 w-12 rounded-full bg-white/50" />
-      {/* coin 子 */}
-      {coins.map((c, i) => (
-        <span
-          key={i}
-          className="absolute flex items-center justify-center rounded-full font-han font-bold text-white shadow-[0_0.25rem_0.5rem_rgba(0,0,0,0.12)]"
-          style={{
-            left: c.x,
-            top: c.y,
-            width: c.size,
-            height: c.size,
-            background: c.bg,
-            fontSize: c.size * 0.5,
-          }}
-          lang="zh"
-        >
-          子
-        </span>
-      ))}
-      {/* sao nhỏ */}
-      <span className="absolute left-[12%] top-[24%] text-yellow-300 text-lg">★</span>
-      <span className="absolute left-[46%] top-[52%] text-yellow-200 text-sm">★</span>
-    </div>
-  );
-}

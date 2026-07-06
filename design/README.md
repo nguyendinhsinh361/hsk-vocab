@@ -18,6 +18,7 @@ Web app học **từ vựng tiếng Trung theo HSK** (giao diện tiếng Việt
 | [`screens.md`](./screens.md) | Mô tả chi tiết từng màn web |
 | [`design-tokens.md`](./design-tokens.md) | Màu, typography, spacing, radius (Figma variables) |
 | [`components.md`](./components.md) | Spec component & layout: sidebar, card, button, header, grid |
+| [`exercise-generation.md`](./exercise-generation.md) | Thuật toán sinh bài tập (BNPD): công thức M1/M2/M3, vòng xoay không trùng, D2/D3 tổng kết |
 
 ## Danh mục màn hình (page WEB)
 

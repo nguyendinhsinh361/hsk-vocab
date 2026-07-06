@@ -94,13 +94,13 @@ export default function ChooseRootWeb() {
         <div className="flex gap-5 items-center justify-center w-full max-w-[51.25rem]">
           <button
             onClick={() => { const i = Math.floor(Math.random() * Math.max(roots.length, 1)); setSelected(i); start(i); }}
-            className="flex-1 max-w-[25rem] h-[3.375rem] rounded-full bg-white border border-neutral-300 border-b-4 flex items-center justify-center font-semibold text-[0.9375rem] sm:text-base text-[#00b2a5] whitespace-nowrap px-3"
+            className="flex-1 max-w-[25rem] h-[3.375rem] rounded-full bg-white border border-neutral-300 border-b-4 flex items-center justify-center font-semibold text-[0.9375rem] sm:text-base text-primary whitespace-nowrap px-3"
           >
             Chưa biết chọn gốc nào?
           </button>
           <button
             onClick={() => start()}
-            className="flex-1 max-w-[25rem] h-[3.375rem] rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] flex items-center justify-center font-semibold text-[0.9375rem] sm:text-base text-white whitespace-nowrap px-3"
+            className="flex-1 max-w-[25rem] h-[3.375rem] rounded-full bg-primary border-b-4 border-[#008f85] flex items-center justify-center font-semibold text-[0.9375rem] sm:text-base text-white whitespace-nowrap px-3"
           >
             Làm bài ngay
           </button>
@@ -117,13 +117,13 @@ function RootCard({ node, variant }: { node: RootTree; variant: 'teal' | 'white'
       className={cn(
         'w-44 flex flex-col items-center justify-center pt-4 pb-5 px-3 border border-b-4',
         'rounded-tl-[1.25rem] rounded-tr-[1.25rem] rounded-bl-[2.5rem] rounded-br-[2.5rem]',
-        teal ? 'bg-[#5ecec6] border-[#00655e]' : 'bg-white border-neutral-300',
+        teal ? 'bg-primary-300 border-primary-800' : 'bg-white border-neutral-300',
       )}
     >
       <span className={cn('font-han font-semibold text-5xl leading-none', teal ? 'text-white' : 'text-neutral-900')} lang="zh">
         {node.character}
       </span>
-      <span className={cn('mt-2 font-medium text-lg leading-6', teal ? 'text-[#00655e]' : 'text-base leading-5 text-[#1976d2]')}>
+      <span className={cn('mt-2 font-medium text-lg leading-6', teal ? 'text-primary-800' : 'text-base leading-5 text-blue-700')}>
         {node.pinyin}
       </span>
       <span className={cn('font-semibold text-sm leading-5', teal ? 'text-white' : 'text-neutral-500')}>
@@ -225,7 +225,7 @@ function RootOptionCard({
       onDoubleClick={onStart}
       className={cn(
         'h-[32rem] w-80 shrink-0 overflow-hidden rounded-[2.5rem] border border-b-4 px-4 py-6 flex flex-col items-center justify-between transition-colors',
-        selected ? 'border-[#00655e] ring-2 ring-[#00b2a5]/30' : 'border-neutral-200',
+        selected ? 'border-primary-800 ring-2 ring-primary/30' : 'border-neutral-200',
       )}
       style={{
         backgroundImage: selected

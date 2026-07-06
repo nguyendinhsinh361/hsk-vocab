@@ -46,7 +46,7 @@ export function SummaryScreen({
   return (
     <>
       <div className="absolute inset-0 overflow-y-auto px-4 md:px-8 pt-16 pb-[9rem] flex flex-col items-center">
-        <div className="w-full max-w-[56rem] flex flex-col items-center gap-5">
+        <div className="w-full max-w-[84rem] flex flex-col items-center gap-5">
           {/* Header: trophy + lời chúc */}
           <div
             className="size-20 rounded-3xl flex items-center justify-center shadow-soft"
@@ -132,14 +132,14 @@ export function SummaryScreen({
       <div className="absolute bottom-0 left-0 z-30 w-full px-4 pb-6 pt-3 flex flex-col items-center gap-2.5 bg-gradient-to-t from-white via-white to-transparent">
         <Link
           href={nextHref}
-          className="w-full max-w-[21.4375rem] md:max-w-[56rem] h-12 md:h-14 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white flex items-center justify-center gap-2 font-sans font-semibold text-base"
+          className="w-full max-w-[21.4375rem] md:max-w-[84rem] h-12 md:h-14 rounded-full bg-primary border-b-4 border-[#008f85] text-white flex items-center justify-center gap-2 font-sans font-semibold text-base"
         >
           Gốc từ tiếp theo
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
         </Link>
-        <div className="w-full max-w-[21.4375rem] md:max-w-[56rem] flex gap-3">
+        <div className="w-full max-w-[21.4375rem] md:max-w-[84rem] flex gap-3">
           <Link
             href="/home"
             className="flex-1 h-11 rounded-full border border-neutral-300 text-neutral-700 flex items-center justify-center font-sans font-semibold text-sm"
@@ -162,7 +162,7 @@ export function SummaryScreen({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl bg-white border border-neutral-200 shadow-soft py-4 flex flex-col items-center gap-0.5">
-      <span className="font-sans font-bold text-[1.375rem] text-[#00b2a5]">{value}</span>
+      <span className="font-sans font-bold text-[1.375rem] text-primary">{value}</span>
       <span className="font-sans text-xs text-neutral-500">{label}</span>
     </div>
   );

@@ -1,20 +1,17 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { Request } from 'express';
+import type { AuthedRequest } from '../auth/jwt-auth.guard';
 
 /**
- * Lấy userId hiện tại. MVP CHƯA có auth: tạm đọc từ header `x-user-id`,
- * fallback về demo user (seed). Khi thêm auth (JWT/Google) → thay bằng
- * req.user.id từ JwtGuard và bỏ fallback này.
+ * Lấy userId hiện tại từ token đã verify (JwtAuthGuard gắn req.user).
+ * Không có token (khách) → chuỗi rỗng → service rơi về demo user.
+ * KHÔNG còn đọc header x-user-id (client tự khai được → giả mạo).
  */
 export const CurrentUserId = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext): string => {
-    const req = ctx.switchToHttp().getRequest<Request>();
-    const headerId = req.header('x-user-id');
-    return headerId && headerId.trim() ? headerId.trim() : DEMO_USER_ID;
+    const req = ctx.switchToHttp().getRequest<AuthedRequest>();
+    return req.user?.sub ?? '';
   },
 );
 
-// Trùng id seed của demo@migii.local sẽ được resolve ở service nếu cần.
+// Email demo user (seed) — resolveUserId fallback về user này khi là khách.
 export const DEMO_USER_EMAIL = 'demo@migii.local';
-// Placeholder; service nên resolve userId thật. Để rỗng nghĩa "dùng demo theo email".
-export const DEMO_USER_ID = '';

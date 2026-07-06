@@ -2,18 +2,17 @@
 
 /**
  * State machine cho LUỒNG LUYỆN TẬP (sau nút "Chiến luôn đi nào").
- * Tải phiên qua GET /practice/session, đi lần lượt qua các `steps`:
+ * Tạo phiên qua POST /practice/sessions, đi lần lượt qua các `steps`:
  *   TEACH   → chọn nghĩa (answering ⇄ checked) → Tiếp tục
  *   PATTERN → xem pattern → Luyện tập ngay
  *   QUIZ    → chọn nghĩa (answering → chấm qua POST /practice/answer → checked) → Tiếp tục
- * Hết steps → summary (điểm phần QUIZ). +10 XP mỗi câu QUIZ đúng.
+ * Hết steps → summary. XP/level/streak lấy từ response /practice/complete —
+ * BE là nguồn sự thật duy nhất, FE KHÔNG tự tính XP.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '@/lib/api';
-import type { PracticeSession, PracticeStep } from '@/lib/types';
-
-const XP_PER_CORRECT = 10;
+import type { PracticeComplete, PracticeSession, PracticeStep } from '@/lib/types';
 
 type Phase = 'loading' | 'error' | 'step' | 'summary';
 type Sub = 'answering' | 'checked';
@@ -28,6 +27,8 @@ interface State {
   inputText: string;
   isCorrect: boolean | null;
   quizCorrect: number;
+  /** Kết quả BE trả về khi hoàn thành phiên (XP/level/streak chính thức). */
+  result: PracticeComplete | null;
 }
 
 const initial: State = {
@@ -40,38 +41,57 @@ const initial: State = {
   inputText: '',
   isCorrect: null,
   quizCorrect: 0,
+  result: null,
 };
 
-export function usePracticeFlow(root: string) {
+/**
+ * @param key     Định danh phiên (rootId hoặc 'review') — đổi key mới tạo phiên mới.
+ * @param fetcher Hàm tạo phiên (mặc định POST /practice/sessions theo key).
+ *                Phiên ôn tập truyền api.reviewSession.
+ */
+export function usePracticeFlow(
+  key: string,
+  fetcher?: () => Promise<PracticeSession>,
+) {
   const [s, setS] = useState<State>(initial);
   // Chặn gọi /practice/complete trùng (React strict-mode gọi effect 2 lần).
   const completedRef = useRef(false);
-  // Chỉ tạo phiên (start) MỘT lần cho mỗi gốc — tránh Strict Mode gọi 2 lần
+  // Chỉ tạo phiên (start) MỘT lần cho mỗi key — tránh Strict Mode gọi 2 lần
   // (sinh 2 PracticeSession, 1 dang dở).
-  const loadedRootRef = useRef<string | null>(null);
+  const loadedKeyRef = useRef<string | null>(null);
+  // Giữ fetcher mới nhất mà không đưa vào deps (caller có thể truyền inline fn).
+  const fetcherRef = useRef(fetcher);
+  fetcherRef.current = fetcher;
 
   const load = useCallback(async () => {
     completedRef.current = false;
     setS({ ...initial, phase: 'loading' });
     try {
-      const session = await api.practiceSession(root);
+      const session = await (fetcherRef.current?.() ??
+        api.practiceSession(key));
       setS({ ...initial, phase: 'step', session });
     } catch (e) {
       setS({ ...initial, phase: 'error', error: (e as Error).message });
     }
-  }, [root]);
+  }, [key]);
 
   useEffect(() => {
-    if (loadedRootRef.current === root) return;
-    loadedRootRef.current = root;
+    if (loadedKeyRef.current === key) return;
+    loadedKeyRef.current = key;
     load();
-  }, [root, load]);
+  }, [key, load]);
 
-  // Hết bài → báo BE hoàn thành phiên (lưu XP/level/streak + tiến trình).
+  // Hết bài → báo BE hoàn thành phiên (idempotent phía BE) và nhận
+  // XP/level/streak chính thức để hiển thị ở màn Summary.
   useEffect(() => {
     if (s.phase !== 'summary' || !s.session || completedRef.current) return;
     completedRef.current = true;
-    api.practiceComplete(s.session.sessionId).catch(() => {});
+    api
+      .practiceComplete(s.session.sessionId)
+      .then((result) => setS((p) => ({ ...p, result })))
+      .catch(() => {
+        // Lỗi mạng/BE: giữ result=null, Summary hiển thị điểm cục bộ.
+      });
   }, [s.phase, s.session]);
 
   const steps: PracticeStep[] = s.session?.steps ?? [];
@@ -150,7 +170,8 @@ export function usePracticeFlow(root: string) {
     total: steps.length,
     totalQuiz: s.session?.totalQuiz ?? 0,
     quizDone,
-    xpEarned: s.quizCorrect * XP_PER_CORRECT,
+    /** XP chính thức từ BE; 0 khi chưa nhận được response /complete. */
+    xpEarned: s.result?.xpEarned ?? 0,
     root: s.session?.root ?? null,
     select,
     setInput,

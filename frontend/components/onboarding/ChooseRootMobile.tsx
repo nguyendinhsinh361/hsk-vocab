@@ -64,7 +64,7 @@ export default function ChooseRootMobile() {
         <div className="flex flex-col items-center gap-3">
           <button
             onClick={start}
-            className="w-full h-12 bg-[#00b2a5] border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-semibold text-base text-white"
+            className="w-full h-12 bg-primary border-b-4 border-[#008f85] rounded-full flex items-center justify-center font-semibold text-base text-white"
           >
             Bắt đầu
           </button>
@@ -84,13 +84,13 @@ function GridCard({ r, selected, onSelect }: { r: (typeof ROOTS)[number]; select
       className={cn(
         'flex-1 min-w-0 flex flex-col items-center justify-center pt-3 pb-5 px-3 border border-b-4',
         'rounded-tl-[1.25rem] rounded-tr-[1.25rem] rounded-bl-[2.5rem] rounded-br-[2.5rem]',
-        selected ? 'bg-[#5ecec6] border-[#00655e]' : 'bg-white border-neutral-300',
+        selected ? 'bg-primary-300 border-primary-800' : 'bg-white border-neutral-300',
       )}
     >
       <span className={cn('font-han font-semibold text-[2.5rem] leading-[3rem] tracking-[-0.0187rem]', selected ? 'text-white' : 'text-neutral-900')} lang="zh">
         {r.char}
       </span>
-      <span className={cn('font-medium text-sm leading-5', selected ? 'text-[#00655e]' : 'text-[#1976d2]')}>{r.pinyin}</span>
+      <span className={cn('font-medium text-sm leading-5', selected ? 'text-primary-800' : 'text-blue-700')}>{r.pinyin}</span>
       <span className={cn('font-semibold text-sm leading-5', selected ? 'text-white' : 'text-neutral-500')}>{r.meaning}</span>
     </button>
   );

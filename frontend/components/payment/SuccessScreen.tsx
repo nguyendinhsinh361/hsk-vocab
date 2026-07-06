@@ -33,7 +33,7 @@ export function SuccessCard() {
       <button
         type="button"
         onClick={() => router.push('/home')}
-        className="mt-6 w-full h-12 md:h-14 rounded-full bg-[#00b2a5] border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base md:text-lg active:translate-y-[0.0625rem]"
+        className="mt-6 w-full h-12 md:h-14 rounded-full bg-primary border-b-4 border-[#008f85] text-white flex items-center justify-center font-sans font-semibold text-base md:text-lg active:translate-y-[0.0625rem]"
       >
         Chiến nào
       </button>
